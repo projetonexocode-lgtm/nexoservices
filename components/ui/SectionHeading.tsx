@@ -1,41 +1,33 @@
 type SectionHeadingProps = {
-  eyebrow: string;
   title: string;
   highlight?: string;
-  description?: string;
-  align?: "left" | "center";
+  tone?: "light" | "dark";
+  className?: string;
 };
 
 export function SectionHeading({
-  eyebrow,
   title,
   highlight,
-  description,
-  align = "left",
+  tone = "light",
+  className = "",
 }: SectionHeadingProps) {
   const parts = highlight ? title.split(highlight) : [title];
+  const titleColor = tone === "dark" ? "text-cream" : "text-charcoal";
+  const markColor = tone === "dark" ? "text-gold" : "text-bronze";
 
   return (
-    <div className={align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-3xl"}>
-      <p className="font-display text-[0.7rem] tracking-[0.28em] text-gold">
-        {eyebrow}
-      </p>
-      <h2 className="mt-3 font-display text-3xl leading-tight text-charcoal sm:text-4xl">
-        {highlight && parts.length === 2 ? (
-          <>
-            {parts[0]}
-            <span className="text-gold">{highlight}</span>
-            {parts[1]}
-          </>
-        ) : (
-          title
-        )}
-      </h2>
-      {description ? (
-        <p className="mt-4 text-base leading-relaxed text-charcoal/75 sm:text-lg">
-          {description}
-        </p>
-      ) : null}
-    </div>
+    <h2
+      className={`font-display text-[clamp(1.8rem,3.6vw,3rem)] leading-[1.1] tracking-[-0.02em] ${titleColor} ${className}`}
+    >
+      {highlight && parts.length === 2 ? (
+        <>
+          {parts[0]}
+          <span className={markColor}>{highlight}</span>
+          {parts[1]}
+        </>
+      ) : (
+        title
+      )}
+    </h2>
   );
 }

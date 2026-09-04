@@ -1,171 +1,163 @@
-export type ServiceIconName =
-  | "plumbing"
-  | "electrical"
-  | "drain"
-  | "heater"
-  | "blinds"
-  | "garage"
-  | "glass"
-  | "locksmith"
-  | "ac"
-  | "frames"
-  | "doors"
-  | "damp"
-  | "roof";
-
 export type Service = {
   slug: string;
   title: string;
   description: string;
-  icon: ServiceIconName;
   whatsappMessage: string;
-  image?: {
-    src: string;
-    alt: string;
-  };
+  image?: string;
+  imageAlt?: string;
 };
 
 export const SERVICES: Service[] = [
   {
     slug: "canalizacao",
     title: "Canalização",
-    description:
-      "Fuga, torneira a pingar, autoclismo avariado ou cano rebentado — o canalizador vai ao local.",
-    icon: "plumbing",
+    description: "Fugas de água, torneiras, sifões e substituição de tubagem.",
     whatsappMessage: "Olá! Preciso de um canalizador urgente.",
-    image: {
-      src: "/nexo-services/canalizacao.jpg",
-      alt: "Técnico Nexo Services a intervir na canalização sob um lava-loiças",
-    },
+    image: "/nexo-services/canalizacao.jpg",
+    imageAlt: "Técnico Nexo Services a trabalhar numa canalização ao domicílio",
   },
   {
     slug: "eletricidade",
     title: "Eletricidade",
-    description:
-      "Quadro a disparar, tomada sem corrente ou avaria elétrica em casa — intervenção imediata.",
-    icon: "electrical",
+    description: "Quadros, curto-circuitos, tomadas e iluminação.",
     whatsappMessage: "Olá! Preciso de um eletricista urgente.",
-    image: {
-      src: "/nexo-services/eletricidade.jpg",
-      alt: "Técnico Nexo Services a trabalhar num quadro elétrico",
-    },
+    image: "/nexo-services/eletricidade.jpg",
+    imageAlt: "Técnico Nexo Services a intervir num quadro eléctrico",
   },
   {
     slug: "desentupimentos",
     title: "Desentupimentos",
-    description:
-      "Sanita, ralo, caleira ou caixa de visita entupida. Desobstrução no próprio dia, quando possível.",
-    icon: "drain",
-    whatsappMessage: "Olá! Preciso de um desentupimento urgente.",
+    description: "Ralos, sanitas e coletores entupidos.",
+    whatsappMessage: "Olá! Preciso de um serviço de desentupimento urgente.",
   },
   {
     slug: "esquentadores-caldeiras",
-    title: "Esquentadores, caldeiras e termoacumuladores",
-    description:
-      "Sem água quente, aparelho em erro ou substituição. Diagnóstico e reparação no domicílio.",
-    icon: "heater",
-    whatsappMessage:
-      "Olá! Preciso de assistência urgente a esquentador, caldeira ou termoacumulador.",
+    title: "Esquentadores e Caldeiras",
+    description: "Água sem aquecer, avarias e manutenção.",
+    whatsappMessage: "Olá! Preciso de um técnico de esquentadores urgente.",
+  },
+  {
+    slug: "termoacumuladores",
+    title: "Termoacumuladores",
+    description: "Instalação, substituição e reparação.",
+    whatsappMessage: "Olá! Preciso de um técnico de termoacumuladores urgente.",
   },
   {
     slug: "estores-persianas",
-    title: "Estores e persianas",
-    description:
-      "Estore preso, fita partida ou motor avariado. Reparação de estores manuais e elétricos.",
-    icon: "blinds",
+    title: "Estores e Persianas",
+    description: "Fitas partidas, motores e réguas danificadas.",
     whatsappMessage: "Olá! Preciso de reparação urgente de estores ou persianas.",
-    image: {
-      src: "/nexo-services/estores.jpg",
-      alt: "Técnico Nexo Services a reparar um estore de enrolar",
-    },
+    image: "/nexo-services/estores.jpg",
+    imageAlt: "Técnico Nexo Services a reparar um estore ao domicílio",
   },
   {
     slug: "portoes-garagem",
-    title: "Portões de garagem",
-    description:
-      "Portão que não abre, comando sem resposta, motor ou calha. Assistência a portões seccionados e basculantes.",
-    icon: "garage",
-    whatsappMessage: "Olá! Preciso de assistência urgente a portão de garagem.",
+    title: "Portões de Garagem",
+    description: "Motor, comandos e alinhamento.",
+    whatsappMessage: "Olá! Preciso de reparação urgente de portão de garagem.",
   },
   {
     slug: "vidros-espelhos",
-    title: "Vidros e espelhos",
-    description:
-      "Vidro partido, substituição de vidro ou espelho. Corte e instalação no local.",
-    icon: "glass",
-    whatsappMessage: "Olá! Preciso de assistência urgente a vidros ou espelhos.",
+    title: "Vidros e Espelhos",
+    description: "Substituição de vidros partidos e espelhos à medida.",
+    whatsappMessage: "Olá! Preciso de um serviço de vidros urgente.",
   },
   {
     slug: "serralharia",
     title: "Serralharia",
-    description:
-      "Fechadura avariada, porta emperrada ou chave partida. Abertura e substituição com identificação.",
-    icon: "locksmith",
+    description: "Portas, grades, estruturas e soldadura.",
     whatsappMessage: "Olá! Preciso de um serralheiro urgente.",
   },
   {
     slug: "ar-condicionado",
-    title: "Ar condicionado",
-    description:
-      "Sem frio nem calor, ruído, fuga ou manutenção. Assistência a unidades interiores e exteriores.",
-    icon: "ac",
-    whatsappMessage: "Olá! Preciso de assistência urgente a ar condicionado.",
-    image: {
-      src: "/nexo-services/ar-condicionado.jpg",
-      alt: "Técnico Nexo Services a fazer manutenção de um aparelho de ar condicionado",
-    },
+    title: "Ar Condicionado",
+    description: "Instalação, cargas de gás e manutenção.",
+    whatsappMessage: "Olá! Preciso de um técnico de ar condicionado urgente.",
+    image: "/nexo-services/ar-condicionado.jpg",
+    imageAlt: "Técnico Nexo Services a fazer manutenção de ar condicionado",
   },
   {
-    slug: "caixilharia",
-    title: "Caixilharia",
-    description:
-      "Caixilho danificado, vedação falhada ou ajuste de alumínio e PVC. Reparação pontual ao domicílio.",
-    icon: "frames",
-    whatsappMessage: "Olá! Preciso de assistência urgente a caixilharia.",
-    image: {
-      src: "/nexo-services/caixilharia.jpg",
-      alt: "Técnico Nexo Services a instalar caixilharia de janela",
-    },
-  },
-  {
-    slug: "portas-janelas",
-    title: "Portas e janelas",
-    description:
-      "Porta desencaixada, fecho avariado, vedante gasto ou janela que não fecha bem.",
-    icon: "doors",
-    whatsappMessage: "Olá! Preciso de assistência urgente a portas ou janelas.",
-    image: {
-      src: "/nexo-services/portas.jpg",
-      alt: "Técnico Nexo Services a trabalhar no fecho de uma porta",
-    },
+    slug: "caixilharia-portas-janelas",
+    title: "Caixilharia, Portas e Janelas",
+    description: "Vedação, fechos e alinhamento.",
+    whatsappMessage: "Olá! Preciso de um serviço de caixilharia urgente.",
+    image: "/nexo-services/caixilharia.jpg",
+    imageAlt: "Técnico Nexo Services a intervir em caixilharia de janela",
   },
   {
     slug: "infiltracao-humidade",
-    title: "Deteção de infiltração e humidade",
-    description:
-      "Parede húmida, teto a pingar ou origem da infiltração por identificar. Avaliação no local.",
-    icon: "damp",
-    whatsappMessage: "Olá! Preciso de deteção de infiltração ou humidade.",
-    image: {
-      src: "/nexo-services/infiltracao-humidade.jpg",
-      alt: "Técnico Nexo Services a verificar infiltração e humidade numa parede",
-    },
+    title: "Infiltrações e Humidade",
+    description: "Deteção de origem e tratamento.",
+    whatsappMessage: "Olá! Preciso de deteção de infiltração urgente.",
+    image: "/nexo-services/infiltracao-humidade.jpg",
+    imageAlt: "Técnico Nexo Services a inspecionar humidade numa parede",
   },
   {
     slug: "telhados-coberturas",
-    title: "Telhados e coberturas",
-    description:
-      "Telha partida, goteira ou impermeabilização pontual. Intervenção em coberturas com segurança.",
-    icon: "roof",
-    whatsappMessage: "Olá! Preciso de assistência urgente a telhados ou coberturas.",
+    title: "Telhados e Coberturas",
+    description: "Telhas, algeroz e impermeabilização.",
+    whatsappMessage: "Olá! Preciso de reparação urgente de telhado.",
   },
 ];
+
+/** First-screen urgency picks — keep ≤4 for working memory. */
+export const PRIMARY_SERVICE_SLUGS = [
+  "canalizacao",
+  "eletricidade",
+  "desentupimentos",
+  "esquentadores-caldeiras",
+] as const;
+
+export const SERVICE_GROUPS = [
+  {
+    id: "agua",
+    title: "Água e esgotos",
+    slugs: [
+      "canalizacao",
+      "desentupimentos",
+      "esquentadores-caldeiras",
+      "termoacumuladores",
+      "infiltracao-humidade",
+    ],
+  },
+  {
+    id: "luz",
+    title: "Luz e clima",
+    slugs: ["eletricidade", "ar-condicionado"],
+  },
+  {
+    id: "acesso",
+    title: "Acesso e segurança",
+    slugs: [
+      "portoes-garagem",
+      "serralharia",
+      "vidros-espelhos",
+      "estores-persianas",
+    ],
+  },
+  {
+    id: "estrutura",
+    title: "Casa e estrutura",
+    slugs: ["caixilharia-portas-janelas", "telhados-coberturas"],
+  },
+] as const;
 
 export const FOOTER_SERVICES = [
   "Canalização",
   "Eletricidade",
   "Desentupimentos",
   "Esquentadores e caldeiras",
-  "Estores e persianas",
-  "Portões de garagem",
 ] as const;
+
+const SERVICE_BY_SLUG = new Map(SERVICES.map((service) => [service.slug, service]));
+
+export function getService(slug: string): Service | undefined {
+  return SERVICE_BY_SLUG.get(slug);
+}
+
+export function servicesInGroup(slugs: readonly string[]): Service[] {
+  return slugs.flatMap((slug) => {
+    const service = getService(slug);
+    return service ? [service] : [];
+  });
+}

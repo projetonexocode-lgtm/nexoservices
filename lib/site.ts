@@ -24,8 +24,7 @@ export function buildWhatsAppUrl(message: string): string {
 
 export const NAV_ITEMS = [
   { href: "/#servicos", label: "Serviços" },
-  { href: "/#como-funciona", label: "Como funciona" },
-  { href: "/#cobertura", label: "Área" },
+  { href: "/#processo", label: "Como funciona" },
+  { href: "/#cobertura", label: "Cobertura" },
   { href: "/#faq", label: "FAQ" },
-  { href: "/#contacto", label: "Contacto" },
 ] as const;

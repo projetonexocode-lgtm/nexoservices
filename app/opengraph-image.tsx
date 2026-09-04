@@ -15,9 +15,9 @@ export default function OpenGraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#0B0B0D",
+          background: "#1A1815",
           padding: "72px",
-          color: "#F2F2F2",
+          color: "#FAF7F2",
         }}
       >
         <div
@@ -25,18 +25,18 @@ export default function OpenGraphImage() {
             fontSize: 22,
             letterSpacing: "0.28em",
             textTransform: "uppercase",
-            color: "#F2C166",
+            color: "#C9A464",
           }}
         >
           Lisboa · Área Metropolitana · Portugal
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ fontSize: 64, lineHeight: 1.05 }}>{SITE.name}</div>
-          <div style={{ marginTop: 18, fontSize: 36, color: "#F2C166" }}>
-            Avaria em casa? Resolvemos hoje.
+          <div style={{ marginTop: 18, fontSize: 36, color: "#C9A464" }}>
+            Avaria em casa? Fale connosco agora.
           </div>
         </div>
-        <div style={{ fontSize: 24, color: "#F2F2F2", opacity: 0.7 }}>
+        <div style={{ fontSize: 24, color: "#FAF7F2", opacity: 0.7 }}>
           Reparações urgentes ao domicílio
         </div>
       </div>

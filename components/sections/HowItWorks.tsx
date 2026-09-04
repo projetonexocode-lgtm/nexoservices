@@ -3,28 +3,24 @@ import { STEPS } from "@/lib/content";
 
 export function HowItWorks() {
   return (
-    <section id="como-funciona" className="scroll-mt-28 px-4 py-14 sm:px-8 sm:py-20">
+    <section
+      id="processo"
+      className="scroll-mt-28 bg-cream px-6 py-[clamp(4.5rem,8vw,8.1rem)] sm:px-8"
+    >
       <div className="mx-auto max-w-6xl">
         <SectionHeading
-          eyebrow="Como funciona"
-          title="Três passos. Sem surpresas."
-          highlight="Três passos"
+          title="Do contacto à reparação, em três passos."
+          highlight="contacto"
+          className="mb-12 max-w-[20ch]"
         />
-        <ol className="mt-10 grid gap-3 md:grid-cols-3">
+        <ol className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,290px),1fr))] gap-8">
           {STEPS.map((step) => (
-            <li
-              key={step.number}
-              className="border border-bronze/20 bg-sand p-5 sm:p-6"
-            >
-              <p className="font-display text-[0.7rem] tracking-[0.22em] text-gold">
-                {step.number}
-              </p>
-              <h3 className="mt-3 font-display text-2xl text-charcoal">
+            <li key={step.number} className="flex flex-col gap-3">
+              <p className="font-display text-4xl leading-none text-bronze">{step.number}</p>
+              <h3 className="font-display text-[1.22rem] leading-snug text-charcoal">
                 {step.title}
               </h3>
-              <p className="mt-3 text-sm leading-relaxed text-charcoal/75">
-                {step.body}
-              </p>
+              <p className="text-[15px] leading-relaxed text-muted">{step.body}</p>
             </li>
           ))}
         </ol>

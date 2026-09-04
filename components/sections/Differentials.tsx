@@ -1,31 +1,24 @@
-import { PlaceholderNote } from "@/components/ui/PlaceholderNote";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { DIFFERENTIALS } from "@/lib/content";
 
 export function Differentials() {
   return (
-    <section id="diferenciais" className="scroll-mt-28 px-4 py-14 sm:px-8 sm:py-20">
+    <section
+      id="diferenciais"
+      className="scroll-mt-28 bg-sand px-6 py-[clamp(4.5rem,8vw,8.1rem)] sm:px-8"
+    >
       <div className="mx-auto max-w-6xl">
         <SectionHeading
-          eyebrow="Porquê a Nexo Services"
-          title="Clareza antes de qualquer intervenção."
-          highlight="Clareza"
+          title="Sem surpresas na fatura."
+          className="mb-10 max-w-[20ch]"
         />
-        <ul className="mt-10 grid gap-3 sm:grid-cols-2">
+        <ul className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,250px),1fr))] gap-8">
           {DIFFERENTIALS.map((item) => (
-            <li
-              key={item.title}
-              className="border border-bronze/20 bg-sand p-5 sm:p-6"
-            >
-              {item.placeholder ? (
-                <PlaceholderNote className="mb-2">
-                  A confirmar com o cliente
-                </PlaceholderNote>
-              ) : null}
-              <h3 className="font-display text-2xl text-charcoal">{item.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-charcoal/75">
-                {item.body}
-              </p>
+            <li key={item.title} className="flex flex-col gap-2">
+              <h3 className="font-display text-[1.2rem] leading-snug text-charcoal">
+                {item.title}
+              </h3>
+              <p className="text-[15px] leading-relaxed text-muted">{item.body}</p>
             </li>
           ))}
         </ul>

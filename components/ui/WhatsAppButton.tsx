@@ -1,26 +1,35 @@
-import { MessageCircle } from "lucide-react";
 import type { ReactNode } from "react";
 import { buildWhatsAppUrl } from "@/lib/site";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 
 type WhatsAppButtonProps = {
   message: string;
   children: ReactNode;
-  variant?: "primary" | "secondary" | "card";
+  variant?: "pill" | "bar";
+  tone?: "light" | "dark";
   className?: string;
   showIcon?: boolean;
 };
 
-const VARIANTS: Record<NonNullable<WhatsAppButtonProps["variant"]>, string> = {
-  primary: "bg-gold text-cream hover:bg-gold/90",
-  secondary:
-    "border border-gold bg-transparent text-charcoal hover:bg-sand",
-  card: "border border-gold/50 bg-cream text-charcoal hover:border-gold hover:bg-sand",
+const VARIANTS: Record<
+  NonNullable<WhatsAppButtonProps["variant"]>,
+  Record<NonNullable<WhatsAppButtonProps["tone"]>, string>
+> = {
+  pill: {
+    light: "rounded-xl border border-charcoal text-charcoal hover:bg-sand",
+    dark: "rounded-xl border border-cream/70 text-cream hover:bg-cream/10",
+  },
+  bar: {
+    light: "rounded-xl bg-sand text-charcoal hover:bg-gold",
+    dark: "rounded-xl bg-cream/15 text-cream hover:bg-cream/25",
+  },
 };
 
 export function WhatsAppButton({
   message,
   children,
-  variant = "secondary",
+  variant = "pill",
+  tone = "light",
   className = "",
   showIcon = true,
 }: WhatsAppButtonProps) {
@@ -29,9 +38,15 @@ export function WhatsAppButton({
       href={buildWhatsAppUrl(message)}
       target="_blank"
       rel="noopener noreferrer"
-      className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-none px-5 font-display text-sm tracking-[0.14em] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold ${VARIANTS[variant]} ${className}`}
+      className={`inline-flex min-h-12 items-center justify-center gap-2.5 px-6 font-sans text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bronze ${VARIANTS[variant][tone]} ${className}`}
     >
-      {showIcon ? <MessageCircle className="size-4 shrink-0" aria-hidden /> : null}
+      {showIcon ? (
+        <WhatsAppIcon
+          size={18}
+          bubbleColor="currentColor"
+          dotColor={tone === "dark" ? "#1A1815" : "#FAF7F2"}
+        />
+      ) : null}
       <span>{children}</span>
     </a>
   );

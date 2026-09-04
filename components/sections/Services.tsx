@@ -1,56 +1,145 @@
 import Image from "next/image";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { ServiceIcon } from "@/components/ui/ServiceIcon";
-import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
-import { SERVICES } from "@/lib/services";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
+import { buildWhatsAppUrl, URGENT_WHATSAPP_MESSAGE } from "@/lib/site";
+import {
+  PRIMARY_SERVICE_SLUGS,
+  SERVICE_GROUPS,
+  getService,
+  servicesInGroup,
+  type Service,
+} from "@/lib/services";
+
+function ServiceThumb({ service }: { service: Service }) {
+  if (service.image) {
+    return (
+      <span className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-sand">
+        <Image
+          src={service.image}
+          alt={service.imageAlt ?? ""}
+          fill
+          sizes="56px"
+          className="object-cover"
+        />
+      </span>
+    );
+  }
+
+  return (
+    <span
+      className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-sand text-bronze"
+      aria-hidden
+    >
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <rect
+          x="3.5"
+          y="3.5"
+          width="17"
+          height="17"
+          rx="4"
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
+        <path
+          d="M8 12h8M12 8v8"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+      </svg>
+    </span>
+  );
+}
+
+function ServiceRow({ service }: { service: Service }) {
+  return (
+    <li>
+      <a
+        href={buildWhatsAppUrl(service.whatsappMessage)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group flex min-h-16 items-center gap-3 py-3.5 text-charcoal transition-colors hover:text-bronze"
+      >
+        <ServiceThumb service={service} />
+        <span className="min-w-0 flex-1">
+          <span className="block font-display text-[1.05rem] leading-tight">
+            {service.title}
+          </span>
+          <span className="mt-1 block text-sm leading-snug text-muted group-hover:text-bronze">
+            {service.description}
+          </span>
+        </span>
+        <span className="shrink-0 text-sm text-bronze">WhatsApp</span>
+      </a>
+    </li>
+  );
+}
 
 export function Services() {
+  const primary = PRIMARY_SERVICE_SLUGS.map((slug) => getService(slug)).filter(
+    (service): service is Service => Boolean(service),
+  );
+
   return (
-    <section id="servicos" className="scroll-mt-28 px-4 py-14 sm:px-8 sm:py-20">
+    <section id="servicos" className="scroll-mt-28 bg-cream px-6 py-[clamp(4.5rem,8vw,8.1rem)] sm:px-8">
       <div className="mx-auto max-w-6xl">
-        <SectionHeading
-          eyebrow="Serviços de reparação"
-          title="O problema típico. O técnico certo."
-          highlight="técnico certo"
-          description="Cada cartão abre o WhatsApp com o serviço já identificado. Digite só a morada e siga."
-        />
-        <ul className="mt-10 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {SERVICES.map((service) => (
-            <li key={service.slug}>
-              <article className="flex h-full flex-col overflow-hidden border border-bronze/20 bg-sand">
-                {service.image ? (
-                  <div className="relative aspect-16/10">
-                    <Image
-                      src={service.image.src}
-                      alt={service.image.alt}
-                      fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
-                      className="object-cover"
-                    />
-                  </div>
-                ) : null}
-                <div className="flex flex-1 flex-col p-4 sm:p-5">
-                  <span className="inline-flex size-11 items-center justify-center border border-bronze/40 bg-cream text-bronze">
-                    <ServiceIcon name={service.icon} className="size-5" />
-                  </span>
-                  <h3 className="mt-4 font-display text-xl text-charcoal">
-                    {service.title}
-                  </h3>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-charcoal/70">
-                    {service.description}
-                  </p>
-                  <WhatsAppButton
-                    message={service.whatsappMessage}
-                    variant="card"
-                    className="mt-5 w-full min-h-12 px-3 text-[0.9rem]"
-                  >
-                    Pedir por WhatsApp
-                  </WhatsAppButton>
-                </div>
-              </article>
-            </li>
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-5">
+          <SectionHeading
+            title="Diga-nos o que avariou. Tratamos do resto."
+            highlight="Tratamos do resto."
+            className="max-w-[22ch]"
+          />
+          <p className="max-w-[34ch] text-[15px] leading-relaxed text-muted">
+            As urgências mais pedidas. Cada linha abre o WhatsApp já com o
+            problema identificado.
+          </p>
+        </div>
+
+        <a
+          href={buildWhatsAppUrl(URGENT_WHATSAPP_MESSAGE)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mb-8 flex min-h-14 items-center justify-between gap-4 rounded-xl bg-charcoal px-5 py-4 text-cream transition-colors hover:bg-bronze"
+        >
+          <span className="font-display text-lg leading-snug">
+            Não sei o que é — WhatsApp urgente
+          </span>
+          <span className="flex shrink-0 items-center gap-2 text-sm">
+            <WhatsAppIcon size={16} bubbleColor="currentColor" dotColor="#1A1815" />
+            Enviar
+          </span>
+        </a>
+
+        <ul className="mb-6 divide-y divide-bronze/30 border-y border-bronze/40">
+          {primary.map((service) => (
+            <ServiceRow key={service.slug} service={service} />
           ))}
         </ul>
+
+        <details className="group rounded-xl border border-bronze/40 bg-sand/60">
+          <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 marker:hidden [&::-webkit-details-marker]:hidden">
+            <span className="font-display text-lg text-charcoal">
+              Ver todos os serviços
+            </span>
+            <span className="text-bronze transition-transform group-open:rotate-45" aria-hidden>
+              +
+            </span>
+          </summary>
+          <div className="grid gap-8 border-t border-bronze/30 px-5 py-6 lg:grid-cols-2">
+            {SERVICE_GROUPS.map((group) => (
+              <div key={group.id}>
+                <h3 className="mb-2 font-display text-xl text-charcoal">
+                  {group.title}
+                </h3>
+                <ul className="divide-y divide-bronze/25">
+                  {servicesInGroup(group.slugs).map((service) => (
+                    <ServiceRow key={service.slug} service={service} />
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </details>
       </div>
     </section>
   );

@@ -1,174 +1,238 @@
 "use client";
 
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useRef, useState, type FormEvent, type MouseEvent, type ReactNode } from "react";
 import { CallButton } from "@/components/ui/CallButton";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
-import { SITE, URGENT_WHATSAPP_MESSAGE } from "@/lib/site";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
+import {
+  CONTACT_LIMITS,
+  UNKNOWN_SERVICE,
+  contactWhatsAppMessage,
+  parseContactPayload,
+} from "@/lib/contact";
+import { PRIMARY_SERVICE_SLUGS, getService } from "@/lib/services";
+import { buildWhatsAppUrl, SITE, URGENT_WHATSAPP_MESSAGE } from "@/lib/site";
 
-type FormState = "idle" | "submitting" | "success" | "error";
+const OTHER_SERVICE = "Outro serviço";
+
+const SERVICE_OPTIONS = [
+  UNKNOWN_SERVICE,
+  ...PRIMARY_SERVICE_SLUGS.map((slug) => getService(slug)?.title).filter(
+    (title): title is string => Boolean(title),
+  ),
+  OTHER_SERVICE,
+];
+
+type FormStatus = "idle" | "loading" | "success" | "error";
 
 export function FinalCta() {
-  const [state, setState] = useState<FormState>("idle");
-  const [error, setError] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
+  const [nome, setNome] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [servico, setServico] = useState(UNKNOWN_SERVICE);
+  const [mensagem, setMensagem] = useState("");
+  const [company, setCompany] = useState("");
+  const [status, setStatus] = useState<FormStatus>("idle");
+  const [feedback, setFeedback] = useState("");
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const payload = {
+    name: nome,
+    phone: telefone,
+    service: servico,
+    message: mensagem,
+    company,
+  };
+
+  const whatsappHref = buildWhatsAppUrl(contactWhatsAppMessage({
+    name: nome || "—",
+    phone: telefone || "—",
+    service: servico,
+    message: mensagem || "Preciso de assistência técnica urgente.",
+  }));
+
+  function guardWhatsApp(event: MouseEvent<HTMLAnchorElement>) {
+    if (!formRef.current?.reportValidity()) {
+      event.preventDefault();
+    }
+  }
+
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setError("");
-    setState("submitting");
+    if (!formRef.current?.reportValidity()) return;
 
-    const form = event.currentTarget;
-    const data = new FormData(form);
+    const parsed = parseContactPayload(payload);
+    if (!parsed.ok) {
+      setStatus("error");
+      setFeedback(parsed.error);
+      return;
+    }
+
+    setStatus("loading");
+    setFeedback("A enviar o pedido…");
 
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: data.get("name"),
-          phone: data.get("phone"),
-          need: data.get("need"),
-          website: data.get("website"),
-        }),
+        body: JSON.stringify(payload),
       });
+      const result = (await response.json()) as { message?: string };
 
-      const payload = (await response.json()) as {
-        ok: boolean;
-        error?: string;
-        channel?: "email" | "whatsapp";
-        url?: string;
-      };
-
-      if (!response.ok || !payload.ok) {
-        throw new Error(payload.error || "Não foi possível enviar o pedido.");
+      if (!response.ok) {
+        setStatus("error");
+        setFeedback(
+          result.message ??
+            "Não conseguimos enviar o pedido. Ligue ou use o WhatsApp.",
+        );
+        return;
       }
 
-      if (payload.channel === "whatsapp" && payload.url) {
-        window.open(payload.url, "_blank", "noopener,noreferrer");
-      }
-
-      form.reset();
-      setState("success");
-    } catch (submitError) {
-      console.error("Contact form failed", submitError);
-      setError(
-        submitError instanceof Error
-          ? submitError.message
-          : "Não foi possível enviar o pedido. Use o telefone ou o WhatsApp.",
-      );
-      setState("error");
+      setStatus("success");
+      setFeedback(result.message ?? "Pedido recebido. Ligamos para o número que indicou.");
+      setNome("");
+      setTelefone("");
+      setServico(UNKNOWN_SERVICE);
+      setMensagem("");
+    } catch {
+      setStatus("error");
+      setFeedback("A ligação falhou. Ligue ou use o WhatsApp para não perder o pedido.");
     }
   }
 
   return (
-    <section id="contacto" className="scroll-mt-28 px-4 py-14 sm:px-8 sm:py-20">
-      <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+    <section
+      id="contacto"
+      className="scroll-mt-28 bg-cream px-6 py-[clamp(4.5rem,8vw,8.1rem)] sm:px-8"
+    >
+      <div className="mx-auto grid max-w-6xl items-start gap-[clamp(2.1rem,5vw,4.4rem)] [grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))]">
         <div>
-          <p className="font-display text-[0.7rem] tracking-[0.28em] text-gold">
-            Pedido urgente
-          </p>
-          <h2 className="mt-3 font-display text-3xl leading-tight text-charcoal sm:text-4xl">
-            Precisa de um técnico <span className="text-gold">hoje</span>?
+          <h2 className="max-w-[16ch] font-display text-[clamp(2rem,4.2vw,3.5rem)] leading-[1.05] tracking-[-0.025em] text-charcoal">
+            Deixe o número. <span className="text-bronze">Ligamos nós.</span>
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-charcoal/75">
-            Ligue, envie WhatsApp ou deixe o pedido. Respondemos pelo mesmo
-            canal. Se o e-mail ainda não estiver configurado, o formulário abre
-            o WhatsApp com os seus dados já preenchidos.
+          <p className="mt-5 mb-8 max-w-[42ch] text-[16.5px] leading-relaxed text-muted">
+            Ou fale já connosco. O WhatsApp leva a descrição que escrever ao lado.
           </p>
-          <div className="mt-8 flex flex-col gap-3">
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <CallButton className="w-full min-h-14 px-4 text-base sm:w-auto">
-                Ligar agora
-              </CallButton>
-              <WhatsAppButton
-                message={URGENT_WHATSAPP_MESSAGE}
-                className="w-full min-h-14 px-4 text-base sm:w-auto"
-              >
-                Falar por WhatsApp
-              </WhatsAppButton>
-            </div>
-            <p className="text-sm leading-relaxed text-charcoal/70">
-              <a href={`tel:${SITE.phoneTel}`} className="hover:text-bronze">
-                {SITE.phoneDisplay}
-              </a>
-              {" · "}
-              WhatsApp {SITE.whatsappDisplay}
-            </p>
+          <div className="flex max-w-[400px] flex-col gap-3">
+            <CallButton className="justify-between px-7 py-5 text-[1.03rem]">
+              {SITE.phoneDisplay}
+            </CallButton>
+            <WhatsAppButton
+              message={URGENT_WHATSAPP_MESSAGE}
+              className="justify-between px-7 py-5 text-[1.03rem]"
+            >
+              {SITE.whatsappDisplay}
+            </WhatsAppButton>
           </div>
         </div>
 
         <form
-          onSubmit={handleSubmit}
-          className="border border-bronze/25 bg-sand p-5 sm:p-8"
-          noValidate
+          ref={formRef}
+          onSubmit={onSubmit}
+          className="flex flex-col gap-4 rounded-2xl bg-sand p-[clamp(1.6rem,3.2vw,2.5rem)]"
         >
-          <div className="hidden" aria-hidden>
-            <label htmlFor="website">Website</label>
+          <div className="sr-only" aria-hidden>
+            <label htmlFor="company">Empresa</label>
             <input
-              id="website"
-              name="website"
-              type="text"
+              id="company"
               tabIndex={-1}
               autoComplete="off"
+              value={company}
+              onChange={(event) => setCompany(event.target.value)}
             />
           </div>
 
-          <div className="grid gap-5">
-            <Field label="Nome" htmlFor="name">
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                autoComplete="name"
-                className={fieldClass}
-              />
-            </Field>
-            <Field label="Telefone" htmlFor="phone">
-              <input
-                id="phone"
-                name="phone"
-                type="tel"
-                required
-                autoComplete="tel"
-                inputMode="tel"
-                placeholder="+351 …"
-                className={fieldClass}
-              />
-            </Field>
-            <Field label="O que precisa" htmlFor="need">
-              <textarea
-                id="need"
-                name="need"
-                required
-                rows={4}
-                placeholder="Ex.: fuga na canalização, em Oeiras"
-                className={`${fieldClass} resize-y`}
-              />
-            </Field>
+          <Field label="Nome" htmlFor="nome">
+            <input
+              id="nome"
+              name="name"
+              required
+              minLength={2}
+              maxLength={CONTACT_LIMITS.name}
+              value={nome}
+              onChange={(event) => setNome(event.target.value)}
+              placeholder="O seu nome"
+              autoComplete="name"
+              className={fieldClass}
+            />
+          </Field>
+          <Field label="Telefone" htmlFor="telefone">
+            <input
+              id="telefone"
+              name="phone"
+              type="tel"
+              required
+              inputMode="tel"
+              autoComplete="tel"
+              minLength={9}
+              maxLength={CONTACT_LIMITS.phone}
+              value={telefone}
+              onChange={(event) => setTelefone(event.target.value)}
+              placeholder="+351 ___ ___ ___"
+              className={fieldClass}
+            />
+          </Field>
+          <Field label="Serviço" htmlFor="servico">
+            <select
+              id="servico"
+              name="service"
+              value={servico}
+              onChange={(event) => setServico(event.target.value)}
+              className={fieldClass}
+            >
+              {SERVICE_OPTIONS.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </Field>
+          <Field label="O que precisa" htmlFor="mensagem">
+            <textarea
+              id="mensagem"
+              name="message"
+              required
+              minLength={4}
+              maxLength={CONTACT_LIMITS.message}
+              rows={3}
+              value={mensagem}
+              onChange={(event) => setMensagem(event.target.value)}
+              placeholder="Descreva a avaria e a localidade."
+              className={`${fieldClass} resize-y leading-relaxed`}
+            />
+          </Field>
+
+          <div className="mt-1.5 flex flex-wrap gap-2.5">
+            <button
+              type="submit"
+              disabled={status === "loading"}
+              className="cursor-pointer rounded-xl bg-charcoal px-7 py-4.5 font-sans text-[15px] text-cream transition-colors hover:bg-bronze disabled:cursor-wait disabled:opacity-70"
+            >
+              {status === "loading" ? "A enviar…" : "Pedir que liguem"}
+            </button>
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={guardWhatsApp}
+              className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-xl border border-charcoal/35 px-6 py-4.5 font-sans text-[15px] text-charcoal transition-colors hover:border-bronze hover:text-bronze"
+            >
+              <WhatsAppIcon size={16} />
+              Enviar por WhatsApp
+            </a>
           </div>
 
-          {state === "success" ? (
-            <p className="mt-5 text-sm text-charcoal" role="status">
-              Pedido enviado. Se o WhatsApp abriu, basta confirmar o envio da
-              mensagem. Caso contrário, ligamos em breve.
-            </p>
-          ) : null}
-          {state === "error" ? (
-            <p className="mt-5 text-sm text-gold" role="alert">
-              {error}
-            </p>
-          ) : null}
-
-          <button
-            type="submit"
-            disabled={state === "submitting"}
-            className="mt-6 inline-flex min-h-14 w-full items-center justify-center bg-gold px-5 font-display text-sm tracking-[0.14em] text-cream transition-colors hover:bg-gold/90 disabled:opacity-60 sm:w-auto"
+          <p
+            role="status"
+            aria-live="polite"
+            className={`min-h-5 text-sm leading-relaxed ${
+              status === "error"
+                ? "text-urgent"
+                : status === "success"
+                  ? "text-bronze"
+                  : "text-muted"
+            }`}
           >
-            {state === "submitting" ? "A enviar…" : "Pedir contacto"}
-          </button>
-          <p className="mt-4 text-xs leading-relaxed text-charcoal/55">
-            Ao enviar, autoriza o contacto da Nexo Services sobre este pedido.
-            Não partilhamos os seus dados com terceiros.
+            {feedback || "Para urgência, envie no WhatsApp. Pedir que liguem usa o número que indicar."}
           </p>
         </form>
       </div>
@@ -177,7 +241,7 @@ export function FinalCta() {
 }
 
 const fieldClass =
-  "mt-2 min-h-12 w-full rounded-none border border-bronze/40 bg-cream px-3 text-base text-charcoal outline-none focus:border-gold";
+  "min-h-12 w-full rounded-xl border border-bronze/40 bg-cream px-3.5 py-3.5 text-base text-charcoal outline-none focus:border-bronze";
 
 function Field({
   label,
@@ -189,7 +253,10 @@ function Field({
   children: ReactNode;
 }) {
   return (
-    <label htmlFor={htmlFor} className="block text-sm font-medium text-charcoal">
+    <label
+      htmlFor={htmlFor}
+      className="flex flex-col gap-2 text-sm text-muted"
+    >
       {label}
       {children}
     </label>

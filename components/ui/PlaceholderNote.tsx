@@ -6,7 +6,7 @@ type PlaceholderNoteProps = {
 export function PlaceholderNote({ children, className = "" }: PlaceholderNoteProps) {
   return (
     <p
-      className={`font-display text-[0.62rem] tracking-[0.14em] text-gold ${className}`}
+      className={`inline-flex max-w-full rounded-lg border border-flag/40 bg-flag/10 px-2.5 py-1.5 text-sm leading-snug text-flag ${className}`}
     >
       {children}
     </p>

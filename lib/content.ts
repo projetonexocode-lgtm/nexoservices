@@ -1,61 +1,42 @@
-export const TRUST_ITEMS = [
-  {
-    value: "+5 anos",
-    label: "de experiência",
-    note: "Número consolidado da rede: profissionais parceiros com 5, 15 e mais de 20 anos de experiência cada.",
-    placeholder: false,
-  },
-  {
-    value: "[n.º a enviar]",
-    label: "serviços realizados",
-    note: "PLACEHOLDER — o cliente vai enviar a média oficial de serviços realizados.",
-    placeholder: true,
-  },
-  {
-    value: "6 meses a 2 anos",
-    label: "de garantia",
-    note: "Conforme o tipo de serviço. Instalações com material do cliente: 6 meses sobre a instalação.",
-    placeholder: false,
-  },
+export const CONFIRMED_FACTS = [
+  "+5 anos de experiência",
+  "Garantia de 6 meses a 2 anos",
+  "Fatura com NIF em todos os serviços",
 ] as const;
 
 export const DIFFERENTIALS = [
   {
-    title: "Técnico identificado",
-    body: "O profissional chega identificado e apresenta-se antes de iniciar. [PLACEHOLDER — confirmar procedimento exacto com o cliente.]",
-    placeholder: true,
+    title: "Rede de técnicos parceiros",
+    body: "A Nexo Services coordena técnicos especializados. Em cada pedido, enviamos quem pode resolver a avaria na sua zona.",
   },
   {
     title: "Orçamento antes de começar",
-    body: "O valor é explicado no local, antes de qualquer trabalho avançar. Só segue com o seu acordo. [PLACEHOLDER — confirmar se o orçamento é sempre gratuito.]",
-    placeholder: true,
+    body: "O valor é explicado e aprovado por si antes de qualquer trabalho.",
   },
   {
     title: "Trabalho com garantia",
-    body: "Reparações e serviços especializados com garantia de 6 meses, 1 ano ou 2 anos, conforme o tipo de serviço.",
-    placeholder: false,
+    body: "Todas as reparações têm garantia de 6 meses a 2 anos, conforme o serviço executado.",
   },
   {
-    title: "Resposta rápida",
-    body: "Prioridade a avarias em Lisboa, Área Metropolitana e Margem Sul. [PLACEHOLDER — confirmar prazo médio de chegada e horário de atendimento.]",
-    placeholder: true,
+    title: "Fatura com NIF",
+    body: "É emitida fatura com NIF em todos os serviços.",
   },
 ] as const;
 
 export const STEPS = [
   {
-    number: "01",
+    number: "1",
     title: "Contacte-nos",
-    body: "Ligue ou envie WhatsApp. Diga o que avariou e a localidade — respondemos de imediato.",
+    body: "Ligue ou envie mensagem, indicando a avaria e a localidade.",
   },
   {
-    number: "02",
-    title: "O técnico avalia",
-    body: "Deslocação ao domicílio, diagnóstico no local e orçamento explicado antes de começar.",
+    number: "2",
+    title: "Avaliamos no local",
+    body: "Um técnico parceiro desloca-se, faz o diagnóstico e explica o orçamento antes de começar.",
   },
   {
-    number: "03",
-    title: "Resolve com garantia",
-    body: "Intervenção no próprio dia, quando possível, com garantia escrita conforme o tipo de serviço.",
+    number: "3",
+    title: "Resolvemos com garantia",
+    body: "Sempre que possível, a reparação fica concluída na mesma visita, com garantia e fatura.",
   },
 ] as const;

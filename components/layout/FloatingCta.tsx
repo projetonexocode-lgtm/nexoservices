@@ -1,29 +1,28 @@
-import { MessageCircle, Phone } from "lucide-react";
 import { buildWhatsAppUrl, SITE, URGENT_WHATSAPP_MESSAGE } from "@/lib/site";
+import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 
 export function FloatingCta() {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-bronze/30 bg-cream/95 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur-md sm:inset-x-auto sm:right-4 sm:bottom-[max(1rem,env(safe-area-inset-bottom))] sm:w-auto sm:border sm:border-bronze/30 sm:p-2">
-      <div className="mx-auto flex max-w-6xl gap-2 sm:mx-0">
-        <a
-          href={`tel:${SITE.phoneTel}`}
-          aria-label={`Ligar para ${SITE.phoneDisplay}`}
-          className="inline-flex min-h-14 flex-1 items-center justify-center gap-2 bg-gold px-4 font-display text-base tracking-[0.14em] text-cream transition-colors hover:bg-gold/90 sm:flex-none sm:min-w-[148px]"
-        >
-          <Phone className="size-5 shrink-0" aria-hidden />
-          Ligar
-        </a>
-        <a
-          href={buildWhatsAppUrl(URGENT_WHATSAPP_MESSAGE)}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`Abrir WhatsApp ${SITE.whatsappDisplay} com mensagem pronta`}
-          className="inline-flex min-h-14 flex-1 items-center justify-center gap-2 border border-gold bg-sand px-4 font-display text-base tracking-[0.14em] text-charcoal transition-colors hover:bg-deep/40 sm:flex-none sm:min-w-[148px]"
-        >
-          <MessageCircle className="size-5 shrink-0" aria-hidden />
-          WhatsApp
-        </a>
-      </div>
+    <div className="fixed inset-x-0 bottom-0 z-50 flex gap-px border-t border-bronze/40 bg-cream shadow-[0_-8px_24px_rgba(26,24,21,0.16)] lg:hidden">
+      <a
+        href={`tel:${SITE.phoneTel}`}
+        aria-label={`Ligar para ${SITE.phoneDisplay}`}
+        className="flex min-h-14 min-w-0 flex-1 basis-0 items-center justify-center bg-charcoal px-3 text-base text-cream transition-colors hover:bg-bronze"
+        style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
+      >
+        Ligar
+      </a>
+      <a
+        href={buildWhatsAppUrl(URGENT_WHATSAPP_MESSAGE)}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Abrir WhatsApp ${SITE.whatsappDisplay} com mensagem pronta`}
+        className="flex min-h-14 min-w-0 flex-1 basis-0 items-center justify-center gap-2 bg-sand px-3 text-base text-charcoal transition-colors hover:bg-gold"
+        style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
+      >
+        <WhatsAppIcon size={18} />
+        WhatsApp
+      </a>
     </div>
   );
 }

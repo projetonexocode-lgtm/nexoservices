@@ -1,113 +1,97 @@
 "use client";
 
-import { Menu, Phone, X } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CallButton } from "@/components/ui/CallButton";
 import { Logo } from "@/components/ui/Logo";
-import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
-import { NAV_ITEMS, SITE, URGENT_WHATSAPP_MESSAGE } from "@/lib/site";
+import { buildWhatsAppUrl, NAV_ITEMS, SITE, URGENT_WHATSAPP_MESSAGE } from "@/lib/site";
 
 export function Header() {
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-
   return (
-    <header className="sticky top-0 z-40 border-b border-bronze/25 bg-cream/95 backdrop-blur-md">
-      <div className="border-b border-bronze/20 bg-sand/50">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2 text-[0.68rem] uppercase tracking-[0.14em] text-charcoal/70 sm:px-8 sm:tracking-[0.16em]">
-          <p className="min-w-0 truncate">
-            <span className="sm:hidden">Lisboa · AML</span>
-            <span className="hidden sm:inline">
-              Base em Lisboa · atendimento imediato na AML e Margem Sul
-            </span>
-          </p>
-          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-gold/70 bg-sand px-2.5 py-1 font-display text-[0.62rem] tracking-[0.14em] text-gold">
-            <span className="size-1.5 shrink-0 bg-gold" aria-hidden />
-            Disponível agora
-          </span>
-        </div>
+    <>
+      <div className="bg-charcoal text-sand">
+        <p className="mx-auto max-w-6xl px-4 py-2 text-center text-[13px] leading-snug sm:px-6 sm:text-sm">
+          Prioridade Lisboa e Margem Sul · nacional sob pedido
+        </p>
       </div>
 
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-8">
-        <Link
-          href="/"
-          className="focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bronze"
-          aria-label={`${SITE.name} — início`}
-        >
-          <Logo />
-        </Link>
-
-        <nav className="hidden items-center gap-6 lg:flex" aria-label="Secções">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-sm text-charcoal/80 transition-colors hover:text-gold"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="flex shrink-0 items-center gap-2">
-          <span className="hidden sm:inline-flex">
-            <CallButton className="min-h-11 px-4">Ligar agora</CallButton>
-          </span>
-          <a
-            href={`tel:${SITE.phoneTel}`}
-            className="inline-flex min-h-11 min-w-11 items-center justify-center bg-gold text-cream sm:hidden"
-            aria-label={`Ligar para ${SITE.phoneDisplay}`}
+      <header className="sticky top-0 z-40 border-b border-bronze/40 bg-cream/95 backdrop-blur-md">
+        <div className="mx-auto flex h-[74px] max-w-6xl items-center gap-6 px-5 sm:px-8">
+          <Link
+            href="/"
+            className="min-w-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bronze"
+            aria-label={`${SITE.name} — início`}
           >
-            <Phone className="size-5" />
-          </a>
-          <button
-            type="button"
-            className="inline-flex min-h-11 min-w-11 items-center justify-center text-charcoal lg:hidden"
-            aria-expanded={open}
-            aria-controls="menu-mobile"
-            onClick={() => setOpen((value) => !value)}
-          >
-            {open ? <X className="size-6" /> : <Menu className="size-6" />}
-            <span className="sr-only">{open ? "Fechar menu" : "Abrir menu"}</span>
-          </button>
-        </div>
-      </div>
+            <Logo />
+          </Link>
 
-      {open ? (
-        <div
-          id="menu-mobile"
-          className="border-t border-bronze/25 bg-cream px-4 py-6 lg:hidden"
-        >
-          <nav className="flex flex-col gap-1" aria-label="Menu móvel">
+          <nav
+            className="hidden min-w-0 items-center gap-6 text-[15px] lg:flex"
+            aria-label="Secções"
+          >
             {NAV_ITEMS.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setOpen(false)}
-                className="flex min-h-12 items-center border-b border-bronze/15 font-display text-xl text-charcoal"
+                className="text-muted transition-colors hover:text-charcoal"
               >
                 {item.label}
               </Link>
             ))}
           </nav>
-          <div className="mt-6 flex flex-col gap-3">
-            <CallButton className="w-full min-h-14">Ligar agora</CallButton>
-            <WhatsAppButton
-              message={URGENT_WHATSAPP_MESSAGE}
-              className="w-full min-h-14"
+
+          <div className="ml-auto flex shrink-0 items-center gap-3">
+            <CallButton
+              className="px-4 py-3 text-sm sm:px-5"
+              aria-label={`Ligar agora para ${SITE.phoneDisplay}`}
             >
-              Falar por WhatsApp
-            </WhatsAppButton>
+              Ligar
+            </CallButton>
+            <button
+              type="button"
+              onClick={() => setOpen((value) => !value)}
+              aria-label={open ? "Fechar menu" : "Abrir menu"}
+              aria-expanded={open}
+              aria-controls="menu-mobile"
+              className="flex size-11 shrink-0 flex-col items-center justify-center gap-[5px] rounded-xl border border-bronze/45 bg-transparent lg:hidden"
+            >
+              <span className="block h-px w-[18px] bg-charcoal" aria-hidden />
+              <span className="block h-px w-[18px] bg-charcoal" aria-hidden />
+            </button>
           </div>
         </div>
-      ) : null}
-    </header>
+
+        {open ? (
+          <div
+            id="menu-mobile"
+            className="border-t border-bronze/25 lg:hidden"
+          >
+            <div className="mx-auto flex max-w-6xl flex-col gap-1 px-6 py-4 sm:px-8">
+              {NAV_ITEMS.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="flex min-h-12 items-center py-3 font-display text-lg text-charcoal"
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <a
+                href={buildWhatsAppUrl(URGENT_WHATSAPP_MESSAGE)}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setOpen(false)}
+                className="mt-1.5 flex min-h-12 items-center border-t border-bronze/25 pt-4 text-bronze"
+              >
+                WhatsApp · {SITE.whatsappDisplay}
+              </a>
+            </div>
+          </div>
+        ) : null}
+      </header>
+    </>
   );
 }

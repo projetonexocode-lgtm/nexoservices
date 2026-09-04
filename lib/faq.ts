@@ -1,28 +1,35 @@
 export type FaqItem = {
   question: string;
   answer: string;
+  placeholder?: boolean;
 };
 
 export const FAQS: FaqItem[] = [
   {
+    // TODO: confirm exact operating hours, and whether there's after-hours/weekend service.
     question: "Qual é o horário de atendimento?",
     answer:
-      "[PLACEHOLDER — horário exacto a confirmar pelo cliente.] Atendimento com foco em urgência, com prioridade na Região Metropolitana de Lisboa e Margem Sul. Fora da área imediata, o horário depende da disponibilidade da equipa.",
+      "O horário exacto ainda está a ser definido com a equipa. Confirme disponibilidade no primeiro contacto — prioridade na Grande Lisboa e Margem Sul.",
+    placeholder: true,
   },
   {
-    question: "Em quanto tempo chega o técnico?",
+    // TODO: confirm average technician arrival time.
+    question: "Em quanto tempo chega um técnico?",
     answer:
-      "[PLACEHOLDER — prazo médio de chegada a confirmar.] Na Área Metropolitana de Lisboa e Margem Sul o objetivo é intervir no próprio dia, sempre que a agenda e o tipo de avaria o permitam. No resto do país, o prazo depende da disponibilidade e da distância.",
+      "O prazo médio ainda está a confirmar. No primeiro contacto dizemos o que é possível para a sua localidade e o tipo de avaria.",
+    placeholder: true,
   },
   {
-    question: "Atendem só em Lisboa?",
+    question: "Atendem a minha zona?",
     answer:
-      "A base de operação é Lisboa. O foco imediato de atendimento é a Região Metropolitana de Lisboa e a Margem Sul. Há cobertura nacional mediante disponibilidade — confirme a sua localidade por telefone ou WhatsApp.",
+      "O atendimento imediato abrange a Grande Lisboa e a Margem Sul. No resto do país, a cobertura depende da disponibilidade de técnico — confirme a sua localidade por WhatsApp.",
   },
   {
-    question: "Como funciona o preço?",
+    // TODO: confirm whether there's a travel/call-out fee.
+    question: "Como funciona o orçamento?",
     answer:
-      "[PLACEHOLDER — confirmar se a deslocação e o orçamento são cobrados.] O técnico avalia no local e explica o orçamento antes de começar. Só avançamos com o seu acordo. Não há valores publicados neste site porque cada avaria é diferente.",
+      "No local, o técnico explica o valor antes de iniciar qualquer trabalho. Só avançamos com a sua autorização. Se a deslocação ou o diagnóstico tiverem custo, confirmamos isso no primeiro contacto — ainda a definir.",
+    placeholder: true,
   },
   {
     question: "Os serviços têm garantia?",
@@ -30,8 +37,7 @@ export const FAQS: FaqItem[] = [
       "Sim. Nas reparações e serviços especializados, a garantia é de 6 meses, 1 ano ou 2 anos, conforme o tipo de serviço. Nas instalações com materiais fornecidos pelo próprio cliente (equipamento ou material comprado por sua conta), a garantia é de 6 meses sobre o serviço de instalação — o material segue a garantia do fabricante ou fornecedor.",
   },
   {
-    question: "Atendem ao fim de semana?",
-    answer:
-      "[PLACEHOLDER — confirmar fins de semana e feriados.] Para urgências na Área Metropolitana de Lisboa e Margem Sul, contacte por telefone ou WhatsApp. Confirmamos disponibilidade no momento.",
+    question: "Emitem fatura?",
+    answer: "Sim, é emitida fatura com NIF em todos os serviços.",
   },
 ];

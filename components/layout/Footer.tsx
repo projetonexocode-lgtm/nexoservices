@@ -1,94 +1,66 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
-import { COVERAGE_GROUPS } from "@/lib/coverage";
 import { FOOTER_SERVICES } from "@/lib/services";
 import { buildWhatsAppUrl, SITE, URGENT_WHATSAPP_MESSAGE } from "@/lib/site";
 
 export function Footer() {
   return (
-    <footer className="border-t border-bronze/30 bg-sand pb-[5.75rem] sm:pb-0">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-8 md:grid-cols-2 lg:grid-cols-4">
+    <footer className="bg-charcoal px-6 pt-[clamp(3.25rem,6vw,5.25rem)] pb-[calc(1.5rem+4.5rem)] text-cream/80 lg:pb-8">
+      <div className="mx-auto grid max-w-6xl grid-cols-[repeat(auto-fit,minmax(min(100%,200px),1fr))] gap-10 border-b border-gold/25 pb-10">
         <div>
-          <Logo />
-          <p className="mt-4 max-w-xs text-sm leading-relaxed text-charcoal/75">
-            Reparações e serviços especializados ao domicílio. Base em Lisboa,
-            atendimento imediato na Área Metropolitana e Margem Sul, cobertura
-            nacional mediante disponibilidade.
+          <Logo tone="dark" className="mb-4" />
+          <p className="max-w-[34ch] text-[15px] leading-relaxed">
+            Reparações ao domicílio com prioridade em Lisboa e Margem Sul.
+            No resto do país, mediante disponibilidade.
+          </p>
+        </div>
+
+        <div>
+          <p className="mb-3.5 text-sm text-gold">Contactos</p>
+          <div className="flex flex-col gap-2.5 text-[15px]">
+            <a href={`tel:${SITE.phoneTel}`} className="text-cream hover:text-gold">
+              Telefone · {SITE.phoneDisplay}
+            </a>
+            <a
+              href={buildWhatsAppUrl(URGENT_WHATSAPP_MESSAGE)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-cream hover:text-gold"
+            >
+              WhatsApp · {SITE.whatsappDisplay}
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <p className="mb-3.5 text-sm text-gold">Serviços principais</p>
+          <div className="flex flex-col gap-2.5 text-[15px]">
+            {FOOTER_SERVICES.map((service) => (
+              <Link key={service} href="/#servicos" className="text-cream hover:text-gold">
+                {service}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <p className="mb-3.5 text-sm text-gold">Também fazemos</p>
+          <p className="mb-3.5 max-w-[30ch] text-[15px] leading-relaxed">
+            Obras, remodelações e reabilitação de imóveis.
           </p>
           <a
             href={SITE.projetoNexoUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-5 inline-flex min-h-11 items-center text-sm font-medium text-gold hover:text-charcoal"
+            className="inline-flex min-h-12 items-center rounded-xl border border-gold/55 px-4 text-[15px] text-gold transition-colors hover:bg-gold/15"
           >
-            Também fazemos obras e remodelações → projetonexo.pt
+            projetonexo.pt
           </a>
         </div>
-
-        <div>
-          <p className="font-display text-[0.7rem] tracking-[0.22em] text-gold">
-            Contactos
-          </p>
-          <ul className="mt-4 space-y-2 text-sm text-charcoal/80">
-            <li>
-              Telefone:{" "}
-              <a href={`tel:${SITE.phoneTel}`} className="hover:text-gold">
-                {SITE.phoneDisplay}
-              </a>
-            </li>
-            <li>
-              WhatsApp:{" "}
-              <a
-                href={buildWhatsAppUrl(URGENT_WHATSAPP_MESSAGE)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-gold"
-              >
-                {SITE.whatsappDisplay}
-              </a>
-            </li>
-            <li>Lisboa, Portugal</li>
-          </ul>
-          <p className="mt-6 font-display text-[0.7rem] tracking-[0.22em] text-gold">
-            Redes sociais
-          </p>
-          <p className="mt-2 text-xs leading-relaxed text-charcoal/60">
-            [PLACEHOLDER] Instagram e Facebook — links a enviar pelo cliente.
-          </p>
-        </div>
-
-        <div>
-          <p className="font-display text-[0.7rem] tracking-[0.22em] text-gold">
-            Serviços principais
-          </p>
-          <ul className="mt-4 space-y-2">
-            {FOOTER_SERVICES.map((service) => (
-              <li key={service}>
-                <Link
-                  href="/#servicos"
-                  className="text-sm text-charcoal/80 hover:text-gold"
-                >
-                  {service}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <p className="font-display text-[0.7rem] tracking-[0.22em] text-gold">
-            Áreas de atuação
-          </p>
-          <ul className="mt-4 space-y-2 text-sm text-charcoal/80">
-            {COVERAGE_GROUPS.map((group) => (
-              <li key={group.id}>{group.title}</li>
-            ))}
-            <li>Cobertura nacional mediante disponibilidade</li>
-          </ul>
-        </div>
       </div>
-      <div className="border-t border-bronze/25 px-4 py-4 text-center text-xs text-charcoal/55 sm:px-8">
-        © {new Date().getFullYear()} {SITE.name}. Todos os direitos reservados.
+      <div className="mx-auto flex max-w-6xl flex-wrap justify-between gap-4 pt-5 text-sm text-cream/70">
+        <span>© {new Date().getFullYear()} {SITE.name}. Todos os direitos reservados.</span>
+        <span>Garantias de 6 meses a 2 anos, conforme o serviço.</span>
       </div>
     </footer>
   );
