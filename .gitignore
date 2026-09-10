@@ -38,3 +38,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Payload
+payload.db
+payload.db-*
+media
+.neon
+
+# local agent / editor tooling
+.agents/
+.impeccable/
+.cursor/

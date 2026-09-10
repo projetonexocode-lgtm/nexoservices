@@ -75,10 +75,11 @@ export async function POST(request: Request) {
     );
   }
 
-  const { name, phone, message, service } = parsed.data;
+  const { name, phone, email, message, service } = parsed.data;
   const text = [
     `Nome: ${name}`,
     `Telefone: ${phone}`,
+    `E-mail: ${email}`,
     `Serviço: ${service}`,
     "",
     message,
@@ -94,6 +95,7 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         from,
         to: [to],
+        reply_to: email,
         subject: `Pedido de assistência · ${service} · ${SITE.name}`,
         text,
       }),

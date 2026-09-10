@@ -1,6 +1,6 @@
 export const CONFIRMED_FACTS = [
   "+5 anos de experiência",
-  "Garantia de 6 meses a 2 anos",
+  "Garantia até 3 anos",
   "Fatura com NIF em todos os serviços",
 ] as const;
 
@@ -15,7 +15,7 @@ export const DIFFERENTIALS = [
   },
   {
     title: "Trabalho com garantia",
-    body: "Todas as reparações têm garantia de 6 meses a 2 anos, conforme o serviço executado.",
+    body: "Todas as reparações têm garantia até 3 anos, conforme o serviço executado.",
   },
   {
     title: "Fatura com NIF",

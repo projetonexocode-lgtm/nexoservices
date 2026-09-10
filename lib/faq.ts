@@ -34,7 +34,7 @@ export const FAQS: FaqItem[] = [
   {
     question: "Os serviços têm garantia?",
     answer:
-      "Sim. Nas reparações e serviços especializados, a garantia é de 6 meses, 1 ano ou 2 anos, conforme o tipo de serviço. Nas instalações com materiais fornecidos pelo próprio cliente (equipamento ou material comprado por sua conta), a garantia é de 6 meses sobre o serviço de instalação — o material segue a garantia do fabricante ou fornecedor.",
+      "Sim. Nas reparações e serviços especializados, a garantia vai até 3 anos, conforme o tipo de serviço. Nas instalações com materiais fornecidos pelo próprio cliente (equipamento ou material comprado por sua conta), a garantia é de 6 meses sobre o serviço de instalação — o material segue a garantia do fabricante ou fornecedor.",
   },
   {
     question: "Emitem fatura?",

@@ -11,7 +11,10 @@ import {
   parseContactPayload,
 } from "@/lib/contact";
 import { PRIMARY_SERVICE_SLUGS, getService } from "@/lib/services";
-import { buildWhatsAppUrl, SITE, URGENT_WHATSAPP_MESSAGE } from "@/lib/site";
+import {
+  buildWhatsAppHref,
+  useSiteContact,
+} from "@/components/providers/SiteContactProvider";
 
 const OTHER_SERVICE = "Outro serviço";
 
@@ -25,10 +28,32 @@ const SERVICE_OPTIONS = [
 
 type FormStatus = "idle" | "loading" | "success" | "error";
 
-export function FinalCta() {
+type FinalCtaProps = {
+  title?: string;
+  titleAccent?: string;
+  supportText?: string;
+  phoneDisplay?: string;
+  whatsappDisplay?: string;
+  urgentWhatsappMessage?: string;
+};
+
+export function FinalCta({
+  title = "Deixe o número.",
+  titleAccent = "Ligamos nós.",
+  supportText = "Ou fale já connosco. O WhatsApp leva a descrição que escrever ao lado.",
+  phoneDisplay,
+  whatsappDisplay,
+  urgentWhatsappMessage,
+}: FinalCtaProps) {
+  const site = useSiteContact();
+  const resolvedPhone = phoneDisplay ?? site.phoneDisplay;
+  const resolvedWhatsapp = whatsappDisplay ?? site.whatsappDisplay;
+  const resolvedUrgent = urgentWhatsappMessage ?? site.urgentWhatsappMessage;
+
   const formRef = useRef<HTMLFormElement>(null);
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
+  const [email, setEmail] = useState("");
   const [servico, setServico] = useState(UNKNOWN_SERVICE);
   const [mensagem, setMensagem] = useState("");
   const [company, setCompany] = useState("");
@@ -38,17 +63,22 @@ export function FinalCta() {
   const payload = {
     name: nome,
     phone: telefone,
+    email,
     service: servico,
     message: mensagem,
     company,
   };
 
-  const whatsappHref = buildWhatsAppUrl(contactWhatsAppMessage({
-    name: nome || "—",
-    phone: telefone || "—",
-    service: servico,
-    message: mensagem || "Preciso de assistência técnica urgente.",
-  }));
+  const whatsappHref = buildWhatsAppHref(
+    contactWhatsAppMessage({
+      name: nome || "—",
+      phone: telefone || "—",
+      email: email || "—",
+      service: servico,
+      message: mensagem || "Preciso de assistência técnica urgente.",
+    }),
+    site.whatsappE164,
+  );
 
   function guardWhatsApp(event: MouseEvent<HTMLAnchorElement>) {
     if (!formRef.current?.reportValidity()) {
@@ -91,6 +121,7 @@ export function FinalCta() {
       setFeedback(result.message ?? "Pedido recebido. Ligamos para o número que indicou.");
       setNome("");
       setTelefone("");
+      setEmail("");
       setServico(UNKNOWN_SERVICE);
       setMensagem("");
     } catch {
@@ -100,27 +131,25 @@ export function FinalCta() {
   }
 
   return (
-    <section
-      id="contacto"
-      className="scroll-mt-28 bg-cream px-6 py-[clamp(4.5rem,8vw,8.1rem)] sm:px-8"
-    >
+    <section className="bg-sand px-6 py-[clamp(4.5rem,8vw,8.1rem)] sm:px-8">
       <div className="mx-auto grid max-w-6xl items-start gap-[clamp(2.1rem,5vw,4.4rem)] [grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))]">
         <div>
           <h2 className="max-w-[16ch] font-display text-[clamp(2rem,4.2vw,3.5rem)] leading-[1.05] tracking-[-0.025em] text-charcoal">
-            Deixe o número. <span className="text-bronze">Ligamos nós.</span>
+            {title}{" "}
+            {titleAccent ? <span className="text-bronze">{titleAccent}</span> : null}
           </h2>
           <p className="mt-5 mb-8 max-w-[42ch] text-[16.5px] leading-relaxed text-muted">
-            Ou fale já connosco. O WhatsApp leva a descrição que escrever ao lado.
+            {supportText}
           </p>
           <div className="flex max-w-[400px] flex-col gap-3">
             <CallButton className="justify-between px-7 py-5 text-[1.03rem]">
-              {SITE.phoneDisplay}
+              {resolvedPhone}
             </CallButton>
             <WhatsAppButton
-              message={URGENT_WHATSAPP_MESSAGE}
+              message={resolvedUrgent}
               className="justify-between px-7 py-5 text-[1.03rem]"
             >
-              {SITE.whatsappDisplay}
+              {resolvedWhatsapp}
             </WhatsAppButton>
           </div>
         </div>
@@ -128,7 +157,7 @@ export function FinalCta() {
         <form
           ref={formRef}
           onSubmit={onSubmit}
-          className="flex flex-col gap-4 rounded-2xl bg-sand p-[clamp(1.6rem,3.2vw,2.5rem)]"
+          className="flex flex-col gap-4 rounded-2xl bg-cream p-[clamp(1.6rem,3.2vw,2.5rem)]"
         >
           <div className="sr-only" aria-hidden>
             <label htmlFor="company">Empresa</label>
@@ -171,6 +200,21 @@ export function FinalCta() {
               className={fieldClass}
             />
           </Field>
+          <Field label="E-mail" htmlFor="email">
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              autoComplete="email"
+              inputMode="email"
+              maxLength={CONTACT_LIMITS.email}
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="nome@email.com"
+              className={fieldClass}
+            />
+          </Field>
           <Field label="Serviço" htmlFor="servico">
             <select
               id="servico"
@@ -207,16 +251,16 @@ export function FinalCta() {
               disabled={status === "loading"}
               className="cursor-pointer rounded-xl bg-charcoal px-7 py-4.5 font-sans text-[15px] text-cream transition-colors hover:bg-bronze disabled:cursor-wait disabled:opacity-70"
             >
-              {status === "loading" ? "A enviar…" : "Pedir que liguem"}
+              {status === "loading" ? "A enviar…" : "Falar com o Técnico"}
             </button>
             <a
               href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
               onClick={guardWhatsApp}
-              className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-xl border border-charcoal/35 px-6 py-4.5 font-sans text-[15px] text-charcoal transition-colors hover:border-bronze hover:text-bronze"
+              className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-xl border-2 border-[#25D366] px-6 py-4.5 font-sans text-[15px] text-charcoal transition-colors hover:bg-[#25D366]/10 hover:text-[#128C7E]"
             >
-              <WhatsAppIcon size={16} />
+              <WhatsAppIcon size={16} bubbleColor="#25D366" dotColor="#FAF7F2" />
               Enviar por WhatsApp
             </a>
           </div>
@@ -232,7 +276,8 @@ export function FinalCta() {
                   : "text-muted"
             }`}
           >
-            {feedback || "Para urgência, envie no WhatsApp. Pedir que liguem usa o número que indicar."}
+            {feedback ||
+              "Para urgência, envie no WhatsApp. Falar com o Técnico usa o número e e-mail que indicar."}
           </p>
         </form>
       </div>

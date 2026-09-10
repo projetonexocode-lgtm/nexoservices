@@ -9,8 +9,8 @@
   --color-muted: #4f4a45;
   --color-urgent: #c2331f;
   --color-flag: #a84a32;
-  --font-sans: var(--font-jost);
-  --font-display: var(--font-naville), var(--font-jost), sans-serif;
+  --font-sans: var(--font-outfit);
+  --font-display: var(--font-outfit), sans-serif;
 }
 
 html {
@@ -26,6 +26,11 @@ body {
 
 .font-display {
   letter-spacing: 0.02em;
+}
+
+h1,
+h2 {
+  text-transform: uppercase;
 }
 
 ::selection {

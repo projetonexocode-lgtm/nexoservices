@@ -1,67 +1,224 @@
+"use client";
+
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { Logo } from "@/components/ui/Logo";
-import { FOOTER_SERVICES } from "@/lib/services";
-import { buildWhatsAppUrl, SITE, URGENT_WHATSAPP_MESSAGE } from "@/lib/site";
+import {
+  buildWhatsAppHref,
+  useSiteContact,
+} from "@/components/providers/SiteContactProvider";
+import type { FooterContent } from "@/lib/cms/footer";
 
-export function Footer() {
+type FooterProps = {
+  content: FooterContent;
+};
+
+export function Footer({ content }: FooterProps) {
+  const site = useSiteContact();
+  const servicesColA = content.services.slice(0, 6);
+  const servicesColB = content.services.slice(6, 12);
+
   return (
-    <footer className="bg-charcoal px-6 pt-[clamp(3.25rem,6vw,5.25rem)] pb-[calc(1.5rem+4.5rem)] text-cream/80 lg:pb-8">
-      <div className="mx-auto grid max-w-6xl grid-cols-[repeat(auto-fit,minmax(min(100%,200px),1fr))] gap-10 border-b border-gold/25 pb-10">
-        <div>
-          <Logo tone="dark" className="mb-4" />
-          <p className="max-w-[34ch] text-[15px] leading-relaxed">
-            Reparações ao domicílio com prioridade em Lisboa e Margem Sul.
-            No resto do país, mediante disponibilidade.
-          </p>
-        </div>
+    <footer className="bg-charcoal px-6 pt-[clamp(3.25rem,6vw,5.25rem)] pb-10 text-cream/80 lg:pb-8">
+      <div className="mx-auto max-w-6xl">
+        <div className="grid gap-10 border-b border-gold/20 pb-10 lg:grid-cols-[1.15fr_0.95fr_1.45fr] lg:gap-14">
+          <div>
+            <Logo tone="dark" className="mb-4" />
+            <p className="mb-6 max-w-[32ch] text-[15px] leading-relaxed text-cream/75">
+              {content.blurb}
+            </p>
+            <div className="flex items-center gap-2.5">
+              {content.instagramUrl ? (
+                <SocialLink href={content.instagramUrl} label="Instagram">
+                  <InstagramIcon />
+                </SocialLink>
+              ) : null}
+              {content.facebookUrl ? (
+                <SocialLink href={content.facebookUrl} label="Facebook">
+                  <FacebookIcon />
+                </SocialLink>
+              ) : null}
+              {content.linkedinUrl ? (
+                <SocialLink href={content.linkedinUrl} label="LinkedIn">
+                  <LinkedInIcon />
+                </SocialLink>
+              ) : null}
+            </div>
+          </div>
 
-        <div>
-          <p className="mb-3.5 text-sm text-gold">Contactos</p>
-          <div className="flex flex-col gap-2.5 text-[15px]">
-            <a href={`tel:${SITE.phoneTel}`} className="text-cream hover:text-gold">
-              Telefone · {SITE.phoneDisplay}
-            </a>
-            <a
-              href={buildWhatsAppUrl(URGENT_WHATSAPP_MESSAGE)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-cream hover:text-gold"
-            >
-              WhatsApp · {SITE.whatsappDisplay}
-            </a>
+          <div>
+            <p className="mb-4 text-sm uppercase tracking-[0.08em] text-gold">
+              Contactos
+            </p>
+            <div className="flex flex-col gap-3 text-[15px]">
+              <a
+                href={`tel:${site.phoneTel}`}
+                className="text-gold transition-colors hover:text-cream"
+              >
+                {site.phoneDisplay}
+              </a>
+              <a
+                href={buildWhatsAppHref(
+                  site.urgentWhatsappMessage,
+                  site.whatsappE164,
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex w-fit items-center rounded-lg border border-[#25D366]/70 px-2.5 py-1.5 text-cream transition-colors hover:border-[#25D366]"
+              >
+                WhatsApp · {site.whatsappDisplay}
+              </a>
+              {content.contactEmail ? (
+                <a
+                  href={`mailto:${content.contactEmail}`}
+                  className="break-all text-cream transition-colors hover:text-gold"
+                >
+                  {content.contactEmail}
+                </a>
+              ) : null}
+            </div>
+          </div>
+
+          <div>
+            <p className="mb-4 text-sm uppercase tracking-[0.08em] text-gold">
+              Serviços
+            </p>
+            <div className="grid grid-cols-1 gap-x-10 gap-y-2.5 sm:grid-cols-2">
+              <ul className="flex flex-col gap-2.5 text-[15px]">
+                {servicesColA.map((service) => (
+                  <li key={service}>
+                    <Link
+                      href="/#servicos"
+                      className="text-cream transition-colors hover:text-gold"
+                    >
+                      {service}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <ul className="flex flex-col gap-2.5 text-[15px]">
+                {servicesColB.map((service) => (
+                  <li key={service}>
+                    <Link
+                      href="/#servicos"
+                      className="text-cream transition-colors hover:text-gold"
+                    >
+                      {service}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 
-        <div>
-          <p className="mb-3.5 text-sm text-gold">Serviços principais</p>
-          <div className="flex flex-col gap-2.5 text-[15px]">
-            {FOOTER_SERVICES.map((service) => (
-              <Link key={service} href="/#servicos" className="text-cream hover:text-gold">
-                {service}
-              </Link>
-            ))}
+        <div className="grid gap-8 border-b border-gold/20 py-8 sm:grid-cols-3 sm:gap-10">
+          <div>
+            <p className="mb-3 text-sm uppercase tracking-[0.08em] text-gold">
+              Parceiros
+            </p>
+            <ul className="flex flex-col gap-2 text-[15px] text-cream">
+              {content.partners.map((partner) => (
+                <li key={partner}>{partner}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <p className="mb-3 text-sm uppercase tracking-[0.08em] text-gold">
+              Certificado
+            </p>
+            <ul className="flex flex-col gap-2 text-[15px] text-cream">
+              {content.certificates.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <p className="mb-3 text-sm uppercase tracking-[0.08em] text-gold">
+              {content.alsoDoTitle}
+            </p>
+            <p className="mb-4 max-w-[28ch] text-[15px] leading-relaxed text-cream/75">
+              {content.alsoDoText}
+            </p>
+            {content.alsoDoUrl && content.alsoDoLabel ? (
+              <a
+                href={content.alsoDoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center rounded-xl border border-gold/55 px-4 text-[14px] text-gold transition-colors hover:bg-gold/15"
+              >
+                {content.alsoDoLabel}
+              </a>
+            ) : null}
           </div>
         </div>
 
-        <div>
-          <p className="mb-3.5 text-sm text-gold">Também fazemos</p>
-          <p className="mb-3.5 max-w-[30ch] text-[15px] leading-relaxed">
-            Obras, remodelações e reabilitação de imóveis.
-          </p>
-          <a
-            href={SITE.projetoNexoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-12 items-center rounded-xl border border-gold/55 px-4 text-[15px] text-gold transition-colors hover:bg-gold/15"
-          >
-            projetonexo.pt
-          </a>
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-6 text-sm">
+          <span className="text-cream/60">
+            © {new Date().getFullYear()} {site.name}. Todos os direitos
+            reservados.
+          </span>
+          <span className="font-medium text-gold">{content.warrantyText}</span>
         </div>
-      </div>
-      <div className="mx-auto flex max-w-6xl flex-wrap justify-between gap-4 pt-5 text-sm text-cream/70">
-        <span>© {new Date().getFullYear()} {SITE.name}. Todos os direitos reservados.</span>
-        <span>Garantias de 6 meses a 2 anos, conforme o serviço.</span>
       </div>
     </footer>
+  );
+}
+
+function SocialLink({
+  href,
+  label,
+  children,
+}: {
+  href: string;
+  label: string;
+  children: ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      className="flex size-10 items-center justify-center rounded-full border border-gold/35 text-gold transition-colors hover:border-gold hover:bg-gold/10 hover:text-cream"
+    >
+      {children}
+    </a>
+  );
+}
+
+function InstagramIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect
+        x="3"
+        y="3"
+        width="18"
+        height="18"
+        rx="5"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.6" />
+      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
+    </svg>
+  );
+}
+
+function FacebookIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H7v3h3v7h3v-7h3.1l.9-3H13v-2c0-.6.4-1 1-1z" />
+    </svg>
+  );
+}
+
+function LinkedInIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M6.5 9.5H3.7V20h2.8V9.5zM5.1 4C4.1 4 3.3 4.8 3.3 5.8S4.1 7.6 5.1 7.6 6.9 6.8 6.9 5.8 6.1 4 5.1 4zM20.3 13.2c0-2.4-1.3-3.5-3-3.5-1.4 0-2 .7-2.4 1.3V9.5h-2.8c0 .4 0 10.5 0 10.5h2.8v-5.9c0-.3 0-.6.1-.9.3-.6.9-1.3 1.9-1.3 1.3 0 1.9.9 1.9 2.4V20h2.8v-6.8z" />
+    </svg>
   );
 }

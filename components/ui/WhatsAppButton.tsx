@@ -1,5 +1,10 @@
+"use client";
+
 import type { ReactNode } from "react";
-import { buildWhatsAppUrl } from "@/lib/site";
+import {
+  buildWhatsAppHref,
+  useSiteContact,
+} from "@/components/providers/SiteContactProvider";
 import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 
 type WhatsAppButtonProps = {
@@ -33,9 +38,11 @@ export function WhatsAppButton({
   className = "",
   showIcon = true,
 }: WhatsAppButtonProps) {
+  const site = useSiteContact();
+
   return (
     <a
-      href={buildWhatsAppUrl(message)}
+      href={buildWhatsAppHref(message, site.whatsappE164)}
       target="_blank"
       rel="noopener noreferrer"
       className={`inline-flex min-h-12 items-center justify-center gap-2.5 px-6 font-sans text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bronze ${VARIANTS[variant][tone]} ${className}`}

@@ -12,14 +12,23 @@ export const SITE = {
   whatsappDisplay: "+351 934 900 070",
   phoneDisplay: "+351 214 062 942",
   phoneTel: "+351214062942",
+  contactEmail: "contacto@nexoservices.pt",
   projetoNexoUrl: "https://projetonexo.pt",
+  social: {
+    instagram: "https://www.instagram.com/",
+    facebook: "https://www.facebook.com/",
+    linkedin: "https://www.linkedin.com/",
+  },
 } as const;
 
 export const URGENT_WHATSAPP_MESSAGE =
   "Olá! Preciso de assistência técnica urgente.";
 
-export function buildWhatsAppUrl(message: string): string {
-  return `https://wa.me/${SITE.whatsappE164}?text=${encodeURIComponent(message)}`;
+export function buildWhatsAppUrl(
+  message: string,
+  e164: string = SITE.whatsappE164,
+): string {
+  return `https://wa.me/${e164}?text=${encodeURIComponent(message)}`;
 }
 
 export const NAV_ITEMS = [

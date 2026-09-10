@@ -147,7 +147,19 @@ export const FOOTER_SERVICES = [
   "Eletricidade",
   "Desentupimentos",
   "Esquentadores e caldeiras",
+  "Estores e Persianas",
+  "Caixilharias",
+  "Ar-Condicionado",
+  "Portas/Portas Blindadas",
+  "Portões de Garagem",
+  "Intercomunicadores",
+  "Fechaduras/Chaves de Acesso",
+  "Domótica/Carregadores Elétricos",
 ] as const;
+
+export const FOOTER_PARTNERS = ["Leroy Merlin", "Obramat"] as const;
+
+export const FOOTER_CERTIFICATES = ["IMPIC"] as const;
 
 const SERVICE_BY_SLUG = new Map(SERVICES.map((service) => [service.slug, service]));
 

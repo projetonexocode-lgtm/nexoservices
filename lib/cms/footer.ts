@@ -1,0 +1,65 @@
+import { defaultSiteSettings } from "@/lib/cms/defaults";
+
+export type FooterContent = {
+  blurb: string;
+  contactEmail: string;
+  instagramUrl: string;
+  facebookUrl: string;
+  linkedinUrl: string;
+  services: string[];
+  partners: string[];
+  certificates: string[];
+  alsoDoTitle: string;
+  alsoDoText: string;
+  alsoDoLabel: string;
+  alsoDoUrl: string;
+  warrantyText: string;
+};
+
+type LabelRow = { label?: string | null } | null | undefined;
+
+function labelsFromRows(
+  rows: LabelRow[] | null | undefined,
+  fallback: string[],
+): string[] {
+  const values = (rows || [])
+    .map((row) => row?.label?.trim())
+    .filter((label): label is string => Boolean(label));
+  return values.length > 0 ? values : fallback;
+}
+
+export function footerContentFromSettings(
+  settings: Record<string, unknown>,
+): FooterContent {
+  const defaults = defaultSiteSettings;
+
+  return {
+    blurb:
+      String(settings.footerBlurb || defaults.footerBlurb),
+    contactEmail: String(
+      settings.contactEmail || defaults.contactEmail,
+    ),
+    instagramUrl: String(
+      settings.instagramUrl || defaults.instagramUrl || "",
+    ),
+    facebookUrl: String(settings.facebookUrl || defaults.facebookUrl || ""),
+    linkedinUrl: String(settings.linkedinUrl || defaults.linkedinUrl || ""),
+    services: labelsFromRows(
+      settings.footerServices as LabelRow[],
+      defaults.footerServices.map((item) => item.label),
+    ),
+    partners: labelsFromRows(
+      settings.footerPartners as LabelRow[],
+      defaults.footerPartners.map((item) => item.label),
+    ),
+    certificates: labelsFromRows(
+      settings.footerCertificates as LabelRow[],
+      defaults.footerCertificates.map((item) => item.label),
+    ),
+    alsoDoTitle: String(settings.alsoDoTitle || defaults.alsoDoTitle),
+    alsoDoText: String(settings.alsoDoText || defaults.alsoDoText),
+    alsoDoLabel: String(settings.alsoDoLabel || defaults.alsoDoLabel),
+    alsoDoUrl: String(settings.projetoNexoUrl || defaults.projetoNexoUrl),
+    warrantyText: String(settings.warrantyText || defaults.warrantyText),
+  };
+}

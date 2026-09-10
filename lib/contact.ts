@@ -1,6 +1,7 @@
 export const CONTACT_LIMITS = {
   name: 80,
   phone: 24,
+  email: 120,
   message: 1000,
   service: 80,
 } as const;
@@ -10,6 +11,7 @@ export const UNKNOWN_SERVICE = "Não sei / é urgente";
 export type ContactPayload = {
   name: string;
   phone: string;
+  email: string;
   message: string;
   service: string;
 };
@@ -22,6 +24,8 @@ function asTrimmedString(value: unknown, max: number): string {
   if (typeof value !== "string") return "";
   return value.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "").trim().slice(0, max);
 }
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function parseContactPayload(input: unknown): ContactParseResult {
   if (typeof input !== "object" || input === null) {
@@ -36,6 +40,7 @@ export function parseContactPayload(input: unknown): ContactParseResult {
 
   const name = asTrimmedString(record.name, CONTACT_LIMITS.name);
   const phone = asTrimmedString(record.phone, CONTACT_LIMITS.phone);
+  const email = asTrimmedString(record.email, CONTACT_LIMITS.email).toLowerCase();
   const message = asTrimmedString(record.message, CONTACT_LIMITS.message);
   const service =
     asTrimmedString(record.service, CONTACT_LIMITS.service) || UNKNOWN_SERVICE;
@@ -52,6 +57,13 @@ export function parseContactPayload(input: unknown): ContactParseResult {
     };
   }
 
+  if (!EMAIL_PATTERN.test(email)) {
+    return {
+      ok: false,
+      error: "Indique um e-mail válido para podermos responder-lhe.",
+    };
+  }
+
   if (message.length < 4) {
     return {
       ok: false,
@@ -59,7 +71,7 @@ export function parseContactPayload(input: unknown): ContactParseResult {
     };
   }
 
-  return { ok: true, data: { name, phone, message, service } };
+  return { ok: true, data: { name, phone, email, message, service } };
 }
 
 export function contactWhatsAppMessage(payload: ContactPayload): string {
@@ -67,6 +79,7 @@ export function contactWhatsAppMessage(payload: ContactPayload): string {
     "Olá! Preciso de assistência técnica.",
     `Nome: ${payload.name}`,
     `Telefone: ${payload.phone}`,
+    `E-mail: ${payload.email}`,
     `Serviço: ${payload.service}`,
     "",
     payload.message,

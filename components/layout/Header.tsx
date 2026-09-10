@@ -2,18 +2,36 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import {
+  buildWhatsAppHref,
+  useSiteContact,
+} from "@/components/providers/SiteContactProvider";
 import { CallButton } from "@/components/ui/CallButton";
+import { GoogleReviewsBadge } from "@/components/ui/GoogleReviewsBadge";
 import { Logo } from "@/components/ui/Logo";
-import { buildWhatsAppUrl, NAV_ITEMS, SITE, URGENT_WHATSAPP_MESSAGE } from "@/lib/site";
+import type { NavItem } from "@/lib/cms";
 
-export function Header() {
+type HeaderProps = {
+  navItems: NavItem[];
+  announcement?: string;
+  googleRating?: string;
+  googleReviewsUrl?: string;
+};
+
+export function Header({
+  navItems,
+  announcement = "Prioridade Lisboa e Margem Sul · nacional sob pedido",
+  googleRating = "5.0",
+  googleReviewsUrl,
+}: HeaderProps) {
   const [open, setOpen] = useState(false);
+  const site = useSiteContact();
 
   return (
     <>
       <div className="bg-charcoal text-sand">
         <p className="mx-auto max-w-6xl px-4 py-2 text-center text-[13px] leading-snug sm:px-6 sm:text-sm">
-          Prioridade Lisboa e Margem Sul · nacional sob pedido
+          {announcement}
         </p>
       </div>
 
@@ -22,7 +40,7 @@ export function Header() {
           <Link
             href="/"
             className="min-w-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bronze"
-            aria-label={`${SITE.name} — início`}
+            aria-label={`${site.name} — início`}
           >
             <Logo />
           </Link>
@@ -31,21 +49,26 @@ export function Header() {
             className="hidden min-w-0 items-center gap-6 text-[15px] lg:flex"
             aria-label="Secções"
           >
-            {NAV_ITEMS.map((item) => (
+            {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-muted transition-colors hover:text-charcoal"
+                className="uppercase tracking-[0.06em] text-muted transition-colors hover:text-charcoal"
               >
                 {item.label}
               </Link>
             ))}
           </nav>
 
-          <div className="ml-auto flex shrink-0 items-center gap-3">
+          <div className="ml-auto flex shrink-0 items-center gap-3 sm:gap-4">
+            <GoogleReviewsBadge
+              rating={googleRating}
+              href={googleReviewsUrl}
+              className="hidden sm:inline-flex"
+            />
             <CallButton
               className="px-4 py-3 text-sm sm:px-5"
-              aria-label={`Ligar agora para ${SITE.phoneDisplay}`}
+              aria-label={`Ligar agora para ${site.phoneDisplay}`}
             >
               Ligar
             </CallButton>
@@ -64,29 +87,29 @@ export function Header() {
         </div>
 
         {open ? (
-          <div
-            id="menu-mobile"
-            className="border-t border-bronze/25 lg:hidden"
-          >
+          <div id="menu-mobile" className="border-t border-bronze/25 lg:hidden">
             <div className="mx-auto flex max-w-6xl flex-col gap-1 px-6 py-4 sm:px-8">
-              {NAV_ITEMS.map((item) => (
+              {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
-                  className="flex min-h-12 items-center py-3 font-display text-lg text-charcoal"
+                  className="flex min-h-12 items-center py-3 font-display text-lg uppercase tracking-[0.06em] text-charcoal"
                 >
                   {item.label}
                 </Link>
               ))}
               <a
-                href={buildWhatsAppUrl(URGENT_WHATSAPP_MESSAGE)}
+                href={buildWhatsAppHref(
+                  site.urgentWhatsappMessage,
+                  site.whatsappE164,
+                )}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setOpen(false)}
                 className="mt-1.5 flex min-h-12 items-center border-t border-bronze/25 pt-4 text-bronze"
               >
-                WhatsApp · {SITE.whatsappDisplay}
+                WhatsApp · {site.whatsappDisplay}
               </a>
             </div>
           </div>

@@ -1,5 +1,7 @@
+"use client";
+
 import type { ReactNode } from "react";
-import { SITE } from "@/lib/site";
+import { useSiteContact } from "@/components/providers/SiteContactProvider";
 
 type CallButtonProps = {
   children: ReactNode;
@@ -19,10 +21,12 @@ export function CallButton({
   "aria-label": ariaLabel,
   tone = "light",
 }: CallButtonProps) {
+  const site = useSiteContact();
+
   return (
     <a
-      href={`tel:${SITE.phoneTel}`}
-      aria-label={ariaLabel ?? `Ligar para ${SITE.phoneDisplay}`}
+      href={`tel:${site.phoneTel}`}
+      aria-label={ariaLabel ?? `Ligar para ${site.phoneDisplay}`}
       className={`inline-flex min-h-12 items-center justify-center gap-2.5 rounded-xl px-5 font-sans text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bronze ${TONES[tone]} ${className}`}
     >
       {children}
