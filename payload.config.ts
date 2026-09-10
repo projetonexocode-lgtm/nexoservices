@@ -20,12 +20,21 @@ import {
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 
-const databaseUrl = process.env.DATABASE_URL || "file:./payload.db";
+// Prefer Neon direct (unpooled) URL so Drizzle schema push/DDL works.
+// Pooled PgBouncer endpoints often block or silently fail migrations.
+const databaseUrl =
+  process.env.DATABASE_URL_UNPOOLED ||
+  process.env.DATABASE_URL ||
+  "file:./payload.db";
 
 const db = databaseUrl.startsWith("postgres")
   ? postgresAdapter({
+      // Keep schema push on until Neon matches the Payload schema.
+      // Set PAYLOAD_DB_PUSH=false after first successful production sync.
+      push: process.env.PAYLOAD_DB_PUSH !== "false",
       pool: {
         connectionString: databaseUrl,
+        max: 5,
       },
     })
   : sqliteAdapter({
@@ -34,7 +43,16 @@ const db = databaseUrl.startsWith("postgres")
       },
     });
 
+const serverURL =
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000");
+
 export default buildConfig({
+  serverURL,
   admin: {
     user: Users.slug,
     importMap: {
@@ -55,126 +73,137 @@ export default buildConfig({
   sharp,
   plugins: [],
   async onInit(payload) {
-    const users = await payload.find({
-      collection: "users",
-      limit: 1,
-    });
-
-    if (users.totalDocs === 0 && process.env.PAYLOAD_ADMIN_EMAIL) {
-      await payload.create({
+    try {
+      const users = await payload.find({
         collection: "users",
-        data: {
-          email: process.env.PAYLOAD_ADMIN_EMAIL,
-          password: process.env.PAYLOAD_ADMIN_PASSWORD || "ChangeMe123!",
-          name: "Admin",
-        },
+        limit: 1,
       });
-    }
 
-    const settings = await payload.findGlobal({
-      slug: "site-settings",
-      depth: 0,
-    });
+      if (users.totalDocs === 0 && process.env.PAYLOAD_ADMIN_EMAIL) {
+        await payload.create({
+          collection: "users",
+          data: {
+            email: process.env.PAYLOAD_ADMIN_EMAIL,
+            password: process.env.PAYLOAD_ADMIN_PASSWORD || "ChangeMe123!",
+            name: "Admin",
+          },
+        });
+      }
 
-    const {
-      logoLightUrl: _logoLightUrl,
-      logoDarkUrl: _logoDarkUrl,
-      projetoNexoLogoUrl: _projetoNexoLogoUrl,
-      uiCopy: _uiCopy,
-      ...cmsSiteDefaults
-    } = defaultSiteSettings as typeof defaultSiteSettings & {
-      uiCopy?: unknown;
-    };
+      // Heavy media/content seeding stays local/dev only — production Vercel
+      // cold starts must not block Payload init on filesystem uploads.
+      if (process.env.VERCEL) return;
 
-    if (!settings?.name) {
-      await payload.updateGlobal({
+      const settings = await payload.findGlobal({
         slug: "site-settings",
-        data: cmsSiteDefaults,
+        depth: 0,
       });
-    }
 
-    const logoUpdates: {
-      logoLight?: number | string;
-      logoDark?: number | string;
-      projetoNexoLogo?: number | string;
-    } = {};
+      const {
+        logoLightUrl: _logoLightUrl,
+        logoDarkUrl: _logoDarkUrl,
+        projetoNexoLogoUrl: _projetoNexoLogoUrl,
+        uiCopy: _uiCopy,
+        ...cmsSiteDefaults
+      } = defaultSiteSettings as typeof defaultSiteSettings & {
+        uiCopy?: unknown;
+      };
 
-    if (!settings?.logoLight) {
-      try {
-        const lightLogo = await payload.create({
-          collection: "media",
-          data: { alt: "Nexo Services — logo fundo claro" },
-          filePath: path.resolve(
-            dirname,
-            "public/assets/nexo-services-fundo-claro.svg",
-          ),
+      if (!settings?.name) {
+        await payload.updateGlobal({
+          slug: "site-settings",
+          data: cmsSiteDefaults,
         });
-        logoUpdates.logoLight = lightLogo.id;
-      } catch (error) {
-        console.error("Failed to seed light logo into Media", error);
       }
-    }
 
-    if (!settings?.logoDark) {
-      try {
-        const darkLogo = await payload.create({
-          collection: "media",
-          data: { alt: "Nexo Services — logo fundo escuro" },
-          filePath: path.resolve(dirname, "public/assets/nexo-services.svg"),
+      const logoUpdates: {
+        logoLight?: number | string;
+        logoDark?: number | string;
+        projetoNexoLogo?: number | string;
+      } = {};
+
+      if (!settings?.logoLight) {
+        try {
+          const lightLogo = await payload.create({
+            collection: "media",
+            data: { alt: "Nexo Services — logo fundo claro" },
+            filePath: path.resolve(
+              dirname,
+              "public/assets/nexo-services-fundo-claro.svg",
+            ),
+          });
+          logoUpdates.logoLight = lightLogo.id;
+        } catch (error) {
+          console.error("Failed to seed light logo into Media", error);
+        }
+      }
+
+      if (!settings?.logoDark) {
+        try {
+          const darkLogo = await payload.create({
+            collection: "media",
+            data: { alt: "Nexo Services — logo fundo escuro" },
+            filePath: path.resolve(dirname, "public/assets/nexo-services.svg"),
+          });
+          logoUpdates.logoDark = darkLogo.id;
+        } catch (error) {
+          console.error("Failed to seed dark logo into Media", error);
+        }
+      }
+
+      const settingsRecord = settings as {
+        projetoNexoLogo?: number | string | null;
+      } | null;
+
+      if (!settingsRecord?.projetoNexoLogo) {
+        try {
+          const projetoLogo = await payload.create({
+            collection: "media",
+            data: { alt: "Projeto Nexo" },
+            filePath: path.resolve(
+              dirname,
+              "public/assets/projeto-nexo-logo.svg",
+            ),
+          });
+          logoUpdates.projetoNexoLogo = projetoLogo.id;
+        } catch (error) {
+          console.error("Failed to seed Projeto Nexo logo into Media", error);
+        }
+      }
+
+      if (Object.keys(logoUpdates).length > 0) {
+        await payload.updateGlobal({
+          slug: "site-settings",
+          data: logoUpdates,
         });
-        logoUpdates.logoDark = darkLogo.id;
-      } catch (error) {
-        console.error("Failed to seed dark logo into Media", error);
       }
-    }
 
-    const settingsRecord = settings as {
-      projetoNexoLogo?: number | string | null;
-    } | null;
-
-    if (!settingsRecord?.projetoNexoLogo) {
-      try {
-        const projetoLogo = await payload.create({
-          collection: "media",
-          data: { alt: "Projeto Nexo" },
-          filePath: path.resolve(dirname, "public/assets/projeto-nexo-logo.svg"),
-        });
-        logoUpdates.projetoNexoLogo = projetoLogo.id;
-      } catch (error) {
-        console.error("Failed to seed Projeto Nexo logo into Media", error);
-      }
-    }
-
-    if (Object.keys(logoUpdates).length > 0) {
-      await payload.updateGlobal({
-        slug: "site-settings",
-        data: logoUpdates,
-      });
-    }
-
-    const homepage = await payload.findGlobal({
-      slug: "homepage",
-    });
-
-    if (!homepage?.sections?.length) {
-      await payload.updateGlobal({
+      const homepage = await payload.findGlobal({
         slug: "homepage",
-        data: {
-          sections: defaultHomepageSections,
-        },
       });
-    }
 
-    const aboutPage = await payload.findGlobal({
-      slug: "about-page",
-      depth: 0,
-    });
+      if (!homepage?.sections?.length) {
+        await payload.updateGlobal({
+          slug: "homepage",
+          data: {
+            sections: defaultHomepageSections,
+          },
+        });
+      }
 
-    if (!aboutPage?.heroTitle) {
-      await payload.updateGlobal({
+      const aboutPage = await payload.findGlobal({
         slug: "about-page",
-        data: defaultAboutPage,
+        depth: 0,
       });
+
+      if (!aboutPage?.heroTitle) {
+        await payload.updateGlobal({
+          slug: "about-page",
+          data: defaultAboutPage,
+        });
+      }
+    } catch (error) {
+      console.error("Payload onInit failed", error);
     }
   },
 });
