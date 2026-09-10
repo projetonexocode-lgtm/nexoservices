@@ -35,6 +35,7 @@ export function Header({
 }: HeaderProps) {
   const [open, setOpen] = useState(false);
   const site = useSiteContact();
+  const copy = site.copy;
   const pathname = usePathname();
 
   return (
@@ -50,14 +51,14 @@ export function Header({
           <Link
             href="/"
             className="min-w-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bronze"
-            aria-label={`${site.name} — início`}
+            aria-label={`${site.name} — ${copy.homeAriaLabel}`}
           >
             <Logo tone="light" src={site.logoLightUrl} />
           </Link>
 
           <nav
             className="hidden min-w-0 items-center gap-6 text-[15px] lg:flex"
-            aria-label="Secções"
+            aria-label={copy.navAriaLabel}
           >
             {navItems.map((item) => (
               <Link
@@ -77,19 +78,20 @@ export function Header({
           <div className="ml-auto flex shrink-0 items-center gap-3 sm:gap-4">
             <GoogleReviewsBadge
               rating={googleRating}
+              label={copy.googleReviewsLabel}
               href={googleReviewsUrl}
               className="hidden sm:inline-flex"
             />
             <CallButton
               className="px-4 py-3 text-sm sm:px-5"
-              aria-label={`Ligar agora para ${site.phoneDisplay}`}
+              aria-label={`${copy.headerCallLabel} ${site.phoneDisplay}`}
             >
-              Ligar
+              {copy.headerCallLabel}
             </CallButton>
             <button
               type="button"
               onClick={() => setOpen((value) => !value)}
-              aria-label={open ? "Fechar menu" : "Abrir menu"}
+              aria-label={open ? copy.closeMenuLabel : copy.openMenuLabel}
               aria-expanded={open}
               aria-controls="menu-mobile"
               className="flex size-11 shrink-0 flex-col items-center justify-center gap-[5px] rounded-xl border border-bronze/45 bg-transparent lg:hidden"

@@ -15,6 +15,7 @@ type FooterProps = {
 
 export function Footer({ content }: FooterProps) {
   const site = useSiteContact();
+  const copy = site.copy;
   const servicesColA = content.services.slice(0, 6);
   const servicesColB = content.services.slice(6, 12);
 
@@ -29,17 +30,17 @@ export function Footer({ content }: FooterProps) {
             </p>
             <div className="flex items-center gap-2.5">
               {content.instagramUrl ? (
-                <SocialLink href={content.instagramUrl} label="Instagram">
+                <SocialLink href={content.instagramUrl} label={copy.socialInstagramLabel}>
                   <InstagramIcon />
                 </SocialLink>
               ) : null}
               {content.facebookUrl ? (
-                <SocialLink href={content.facebookUrl} label="Facebook">
+                <SocialLink href={content.facebookUrl} label={copy.socialFacebookLabel}>
                   <FacebookIcon />
                 </SocialLink>
               ) : null}
               {content.linkedinUrl ? (
-                <SocialLink href={content.linkedinUrl} label="LinkedIn">
+                <SocialLink href={content.linkedinUrl} label={copy.socialLinkedinLabel}>
                   <LinkedInIcon />
                 </SocialLink>
               ) : null}
@@ -48,7 +49,7 @@ export function Footer({ content }: FooterProps) {
 
           <div>
             <p className="mb-4 text-sm uppercase tracking-[0.08em] text-gold">
-              Contactos
+              {copy.footerContactsTitle}
             </p>
             <div className="flex flex-col gap-3 text-[15px]">
               <a
@@ -66,7 +67,7 @@ export function Footer({ content }: FooterProps) {
                 rel="noopener noreferrer"
                 className="inline-flex w-fit items-center rounded-lg border border-[#25D366]/70 px-2.5 py-1.5 text-cream transition-colors hover:border-[#25D366]"
               >
-                WhatsApp · {site.whatsappDisplay}
+                {copy.footerWhatsappPrefix} {site.whatsappDisplay}
               </a>
               {content.contactEmail ? (
                 <a
@@ -81,7 +82,7 @@ export function Footer({ content }: FooterProps) {
 
           <div>
             <p className="mb-4 text-sm uppercase tracking-[0.08em] text-gold">
-              Serviços
+              {copy.footerServicesTitle}
             </p>
             <div className="grid grid-cols-1 gap-x-10 gap-y-2.5 sm:grid-cols-2">
               <ul className="flex flex-col gap-2.5 text-[15px]">
@@ -115,7 +116,7 @@ export function Footer({ content }: FooterProps) {
         <div className="grid gap-8 border-b border-gold/20 py-8 sm:grid-cols-3 sm:gap-10">
           <div>
             <p className="mb-3 text-sm uppercase tracking-[0.08em] text-gold">
-              Parceiros
+              {copy.footerPartnersTitle}
             </p>
             <ul className="flex flex-col gap-2 text-[15px] text-cream">
               {content.partners.map((partner) => (
@@ -126,7 +127,7 @@ export function Footer({ content }: FooterProps) {
 
           <div>
             <p className="mb-3 text-sm uppercase tracking-[0.08em] text-gold">
-              Certificado
+              {copy.footerCertificatesTitle}
             </p>
             <ul className="flex flex-col gap-2 text-[15px] text-cream">
               {content.certificates.map((item) => (
@@ -148,7 +149,7 @@ export function Footer({ content }: FooterProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex w-full max-w-[12.25rem] justify-center transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold sm:max-w-[14rem]"
-                aria-label={`${content.alsoDoLabel} — abrir site`}
+                aria-label={`${content.alsoDoLabel} — ${copy.alsoDoOpenAria}`}
               >
                 <img
                   src={content.projetoNexoLogoUrl}
@@ -165,8 +166,7 @@ export function Footer({ content }: FooterProps) {
 
         <div className="flex flex-wrap items-center justify-between gap-3 pt-6 text-sm">
           <span className="text-cream/60">
-            © {new Date().getFullYear()} {site.name}. Todos os direitos
-            reservados.
+            © {new Date().getFullYear()} {site.name}. {copy.footerCopyrightSuffix}
           </span>
           <span className="font-medium text-gold">{content.warrantyText}</span>
         </div>

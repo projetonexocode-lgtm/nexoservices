@@ -1,4 +1,5 @@
 import type { GlobalConfig } from "payload";
+import { uiCopyFields } from "@/lib/cms/uiCopyFields";
 
 export const SiteSettings: GlobalConfig = {
   slug: "site-settings",
@@ -257,6 +258,10 @@ export const SiteSettings: GlobalConfig = {
               defaultValue: "Garantia até 3 anos, conforme o serviço.",
             },
           ],
+        },
+        {
+          label: "Interface",
+          fields: uiCopyFields,
         },
         {
           label: "SEO",

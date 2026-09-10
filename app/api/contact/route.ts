@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { getSiteSettings } from "@/lib/cms";
+import { contactErrorMessage, defaultUiCopy } from "@/lib/cms/uiCopy";
 import { parseContactPayload } from "@/lib/contact";
 import { SITE } from "@/lib/site";
 
@@ -24,14 +26,19 @@ function isRateLimited(key: string): boolean {
 }
 
 export async function POST(request: Request) {
+  const settings = await getSiteSettings();
+  const copy =
+    "uiCopy" in settings && settings.uiCopy
+      ? settings.uiCopy
+      : defaultUiCopy;
+
   const key = clientKey(request);
   if (isRateLimited(key)) {
     return NextResponse.json(
       {
         ok: false,
         code: "rate_limited",
-        message:
-          "Já recebemos vários pedidos deste aparelho. Ligue ou use o WhatsApp para urgências.",
+        message: copy.errorRateLimited,
       },
       { status: 429 },
     );
@@ -45,16 +52,20 @@ export async function POST(request: Request) {
       {
         ok: false,
         code: "invalid",
-        message: "O pedido chegou incompleto. Tente outra vez.",
+        message: copy.errorIncomplete,
       },
       { status: 400 },
     );
   }
 
-  const parsed = parseContactPayload(body);
+  const parsed = parseContactPayload(body, copy.formUnknownService);
   if (!parsed.ok) {
     return NextResponse.json(
-      { ok: false, code: "invalid", message: parsed.error },
+      {
+        ok: false,
+        code: "invalid",
+        message: contactErrorMessage(parsed.code, copy),
+      },
       { status: 400 },
     );
   }
@@ -68,8 +79,7 @@ export async function POST(request: Request) {
       {
         ok: false,
         code: "unconfigured",
-        message:
-          "Ainda não recebemos pedidos por aqui. Ligue ou envie a mesma informação pelo WhatsApp.",
+        message: copy.errorUnconfigured,
       },
       { status: 503 },
     );
@@ -107,8 +117,7 @@ export async function POST(request: Request) {
         {
           ok: false,
           code: "upstream",
-          message:
-            "Não conseguimos enviar o pedido agora. Ligue ou use o WhatsApp — a mensagem já está pronta.",
+          message: copy.errorUpstream,
         },
         { status: 502 },
       );
@@ -119,8 +128,7 @@ export async function POST(request: Request) {
       {
         ok: false,
         code: "network",
-        message:
-          "A ligação falhou. Ligue ou use o WhatsApp para não perder o pedido.",
+        message: copy.errorNetwork,
       },
       { status: 502 },
     );
@@ -128,6 +136,6 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     ok: true,
-    message: "Pedido recebido. Ligamos para o número que indicou.",
+    message: copy.successReceived,
   });
 }

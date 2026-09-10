@@ -80,8 +80,11 @@ export default buildConfig({
       logoLightUrl: _logoLightUrl,
       logoDarkUrl: _logoDarkUrl,
       projetoNexoLogoUrl: _projetoNexoLogoUrl,
+      uiCopy: _uiCopy,
       ...cmsSiteDefaults
-    } = defaultSiteSettings;
+    } = defaultSiteSettings as typeof defaultSiteSettings & {
+      uiCopy?: unknown;
+    };
 
     if (!settings?.name) {
       await payload.updateGlobal({

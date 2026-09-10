@@ -4,27 +4,16 @@ import { useRef, useState, type FormEvent, type MouseEvent, type ReactNode } fro
 import { CallButton } from "@/components/ui/CallButton";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
+import { contactErrorMessage } from "@/lib/cms/uiCopy";
 import {
   CONTACT_LIMITS,
-  UNKNOWN_SERVICE,
   contactWhatsAppMessage,
   parseContactPayload,
 } from "@/lib/contact";
-import { PRIMARY_SERVICE_SLUGS, getService } from "@/lib/services";
 import {
   buildWhatsAppHref,
   useSiteContact,
 } from "@/components/providers/SiteContactProvider";
-
-const OTHER_SERVICE = "Outro serviço";
-
-const SERVICE_OPTIONS = [
-  UNKNOWN_SERVICE,
-  ...PRIMARY_SERVICE_SLUGS.map((slug) => getService(slug)?.title).filter(
-    (title): title is string => Boolean(title),
-  ),
-  OTHER_SERVICE,
-];
 
 type FormStatus = "idle" | "loading" | "success" | "error";
 
@@ -48,15 +37,21 @@ export function FinalCta({
   urgentWhatsappMessage,
 }: FinalCtaProps) {
   const site = useSiteContact();
+  const copy = site.copy;
   const resolvedPhone = phoneDisplay ?? site.phoneDisplay;
   const resolvedWhatsapp = whatsappDisplay ?? site.whatsappDisplay;
   const resolvedUrgent = urgentWhatsappMessage ?? site.urgentWhatsappMessage;
+  const unknownService = copy.formUnknownService;
+  const serviceOptions =
+    copy.formServiceOptions.length > 0
+      ? copy.formServiceOptions
+      : [unknownService, copy.formOtherService];
 
   const formRef = useRef<HTMLFormElement>(null);
   const [nome, setNome] = useState("");
   const [telefone, setTelefone] = useState("");
   const [email, setEmail] = useState("");
-  const [servico, setServico] = useState(UNKNOWN_SERVICE);
+  const [servico, setServico] = useState(serviceOptions[0] || unknownService);
   const [mensagem, setMensagem] = useState("");
   const [company, setCompany] = useState("");
   const [status, setStatus] = useState<FormStatus>("idle");
@@ -72,13 +67,16 @@ export function FinalCta({
   };
 
   const whatsappHref = buildWhatsAppHref(
-    contactWhatsAppMessage({
-      name: nome || "—",
-      phone: telefone || "—",
-      email: email || "—",
-      service: servico,
-      message: mensagem || "Preciso de assistência técnica urgente.",
-    }),
+    contactWhatsAppMessage(
+      {
+        name: nome || "—",
+        phone: telefone || "—",
+        email: email || "—",
+        service: servico,
+        message: mensagem || copy.formDefaultMessage,
+      },
+      copy.formWhatsappIntro,
+    ),
     site.whatsappE164,
   );
 
@@ -92,15 +90,15 @@ export function FinalCta({
     event.preventDefault();
     if (!formRef.current?.reportValidity()) return;
 
-    const parsed = parseContactPayload(payload);
+    const parsed = parseContactPayload(payload, unknownService);
     if (!parsed.ok) {
       setStatus("error");
-      setFeedback(parsed.error);
+      setFeedback(contactErrorMessage(parsed.code, copy));
       return;
     }
 
     setStatus("loading");
-    setFeedback("A enviar o pedido…");
+    setFeedback(copy.formSendingFeedback);
 
     try {
       const response = await fetch("/api/contact", {
@@ -112,23 +110,20 @@ export function FinalCta({
 
       if (!response.ok) {
         setStatus("error");
-        setFeedback(
-          result.message ??
-            "Não conseguimos enviar o pedido. Ligue ou use o WhatsApp.",
-        );
+        setFeedback(result.message ?? copy.formErrorFallback);
         return;
       }
 
       setStatus("success");
-      setFeedback(result.message ?? "Pedido recebido. Ligamos para o número que indicou.");
+      setFeedback(result.message ?? copy.formSuccessFallback);
       setNome("");
       setTelefone("");
       setEmail("");
-      setServico(UNKNOWN_SERVICE);
+      setServico(serviceOptions[0] || unknownService);
       setMensagem("");
     } catch {
       setStatus("error");
-      setFeedback("A ligação falhou. Ligue ou use o WhatsApp para não perder o pedido.");
+      setFeedback(copy.formNetworkError);
     }
   }
 
@@ -165,7 +160,7 @@ export function FinalCta({
           className="flex flex-col gap-4 rounded-2xl bg-cream p-[clamp(1.6rem,3.2vw,2.5rem)]"
         >
           <div className="sr-only" aria-hidden>
-            <label htmlFor="company">Empresa</label>
+            <label htmlFor="company">{copy.formHoneypotLabel}</label>
             <input
               id="company"
               tabIndex={-1}
@@ -175,7 +170,7 @@ export function FinalCta({
             />
           </div>
 
-          <Field label="Nome" htmlFor="nome">
+          <Field label={copy.formNameLabel} htmlFor="nome">
             <input
               id="nome"
               name="name"
@@ -184,12 +179,12 @@ export function FinalCta({
               maxLength={CONTACT_LIMITS.name}
               value={nome}
               onChange={(event) => setNome(event.target.value)}
-              placeholder="O seu nome"
+              placeholder={copy.formNamePlaceholder}
               autoComplete="name"
               className={fieldClass}
             />
           </Field>
-          <Field label="Telefone" htmlFor="telefone">
+          <Field label={copy.formPhoneLabel} htmlFor="telefone">
             <input
               id="telefone"
               name="phone"
@@ -201,11 +196,11 @@ export function FinalCta({
               maxLength={CONTACT_LIMITS.phone}
               value={telefone}
               onChange={(event) => setTelefone(event.target.value)}
-              placeholder="+351 ___ ___ ___"
+              placeholder={copy.formPhonePlaceholder}
               className={fieldClass}
             />
           </Field>
-          <Field label="E-mail" htmlFor="email">
+          <Field label={copy.formEmailLabel} htmlFor="email">
             <input
               id="email"
               name="email"
@@ -216,11 +211,11 @@ export function FinalCta({
               maxLength={CONTACT_LIMITS.email}
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              placeholder="nome@email.com"
+              placeholder={copy.formEmailPlaceholder}
               className={fieldClass}
             />
           </Field>
-          <Field label="Serviço" htmlFor="servico">
+          <Field label={copy.formServiceLabel} htmlFor="servico">
             <select
               id="servico"
               name="service"
@@ -228,14 +223,14 @@ export function FinalCta({
               onChange={(event) => setServico(event.target.value)}
               className={fieldClass}
             >
-              {SERVICE_OPTIONS.map((option) => (
+              {serviceOptions.map((option) => (
                 <option key={option} value={option}>
                   {option}
                 </option>
               ))}
             </select>
           </Field>
-          <Field label="O que precisa" htmlFor="mensagem">
+          <Field label={copy.formMessageLabel} htmlFor="mensagem">
             <textarea
               id="mensagem"
               name="message"
@@ -245,7 +240,7 @@ export function FinalCta({
               rows={3}
               value={mensagem}
               onChange={(event) => setMensagem(event.target.value)}
-              placeholder="Descreva a avaria e a localidade."
+              placeholder={copy.formMessagePlaceholder}
               className={`${fieldClass} resize-y leading-relaxed`}
             />
           </Field>
@@ -256,7 +251,9 @@ export function FinalCta({
               disabled={status === "loading"}
               className="cursor-pointer rounded-xl bg-charcoal px-7 py-4.5 font-sans text-[15px] text-cream transition-colors hover:bg-bronze disabled:cursor-wait disabled:opacity-70"
             >
-              {status === "loading" ? "A enviar…" : "Falar com o Técnico"}
+              {status === "loading"
+                ? copy.formSubmittingLabel
+                : copy.formSubmitLabel}
             </button>
             <a
               href={whatsappHref}
@@ -266,7 +263,7 @@ export function FinalCta({
               className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-xl border-2 border-[#25D366] px-6 py-4.5 font-sans text-[15px] text-charcoal transition-colors hover:bg-[#25D366]/10 hover:text-[#128C7E]"
             >
               <WhatsAppIcon size={16} bubbleColor="#25D366" dotColor="#FAF7F2" />
-              Enviar por WhatsApp
+              {copy.formWhatsappLabel}
             </a>
           </div>
 
@@ -281,8 +278,7 @@ export function FinalCta({
                   : "text-muted"
             }`}
           >
-            {feedback ||
-              "Para urgência, envie no WhatsApp. Falar com o Técnico usa o número e e-mail que indicar."}
+            {feedback || copy.formHint}
           </p>
         </form>
       </div>

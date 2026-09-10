@@ -13,7 +13,7 @@ export function FloatingCta() {
       href={buildWhatsAppHref(site.urgentWhatsappMessage, site.whatsappE164)}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`Abrir WhatsApp ${site.whatsappDisplay}`}
+      aria-label={`${site.copy.floatingWhatsappAria} ${site.whatsappDisplay}`}
       className="fixed right-4 bottom-[max(1.25rem,env(safe-area-inset-bottom))] z-50 flex size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_6px_20px_rgba(37,211,102,0.45)] transition-transform hover:scale-105 hover:bg-[#20BD5A] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#25D366] sm:right-6 sm:bottom-6 sm:size-[3.75rem]"
     >
       <svg

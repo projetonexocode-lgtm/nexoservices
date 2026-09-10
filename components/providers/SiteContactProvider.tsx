@@ -5,6 +5,7 @@ import {
   useContext,
   type ReactNode,
 } from "react";
+import { defaultUiCopy, type UiCopy } from "@/lib/cms/uiCopy";
 import { SITE, URGENT_WHATSAPP_MESSAGE } from "@/lib/site";
 
 export type SiteContactValue = {
@@ -17,6 +18,7 @@ export type SiteContactValue = {
   projetoNexoUrl: string;
   logoLightUrl: string;
   logoDarkUrl: string;
+  copy: UiCopy;
 };
 
 const defaults: SiteContactValue = {
@@ -29,6 +31,7 @@ const defaults: SiteContactValue = {
   projetoNexoUrl: SITE.projetoNexoUrl,
   logoLightUrl: "/assets/nexo-services-fundo-claro.svg",
   logoDarkUrl: "/assets/nexo-services.svg",
+  copy: defaultUiCopy,
 };
 
 const SiteContactContext = createContext<SiteContactValue>(defaults);
@@ -37,11 +40,17 @@ export function SiteContactProvider({
   value,
   children,
 }: {
-  value: Partial<SiteContactValue>;
+  value: Partial<Omit<SiteContactValue, "copy">> & { copy?: UiCopy };
   children: ReactNode;
 }) {
   return (
-    <SiteContactContext.Provider value={{ ...defaults, ...value }}>
+    <SiteContactContext.Provider
+      value={{
+        ...defaults,
+        ...value,
+        copy: value.copy ?? defaults.copy,
+      }}
+    >
       {children}
     </SiteContactContext.Provider>
   );
@@ -49,6 +58,10 @@ export function SiteContactProvider({
 
 export function useSiteContact(): SiteContactValue {
   return useContext(SiteContactContext);
+}
+
+export function useUiCopy(): UiCopy {
+  return useContext(SiteContactContext).copy;
 }
 
 export function buildWhatsAppHref(

@@ -66,9 +66,11 @@ function ServiceThumb({ service }: { service: ServiceItem }) {
 function ServiceRow({
   service,
   whatsappE164,
+  whatsappLabel,
 }: {
   service: ServiceItem;
   whatsappE164: string;
+  whatsappLabel: string;
 }) {
   return (
     <li>
@@ -87,7 +89,7 @@ function ServiceRow({
             {service.description}
           </span>
         </span>
-        <span className="shrink-0 text-sm text-bronze">WhatsApp</span>
+        <span className="shrink-0 text-sm text-bronze">{whatsappLabel}</span>
       </a>
     </li>
   );
@@ -95,6 +97,7 @@ function ServiceRow({
 
 export function ServicesCms({ id, data }: ServicesCmsProps) {
   const site = useSiteContact();
+  const copy = site.copy;
   const primary = (data.primaryServices as ServiceItem[] | undefined) || [];
   const groups =
     (data.groups as Array<{ id?: string; title?: string; items?: ServiceItem[] }> | undefined) ||
@@ -130,7 +133,7 @@ export function ServicesCms({ id, data }: ServicesCmsProps) {
           </span>
           <span className="flex shrink-0 items-center gap-2 text-sm">
             <WhatsAppIcon size={16} bubbleColor="currentColor" dotColor="#1A1815" />
-            Enviar
+            {copy.servicesSendLabel}
           </span>
         </a>
 
@@ -140,6 +143,7 @@ export function ServicesCms({ id, data }: ServicesCmsProps) {
               key={service.slug || service.title}
               service={service}
               whatsappE164={site.whatsappE164}
+              whatsappLabel={copy.servicesWhatsappLabel}
             />
           ))}
         </ul>
@@ -147,7 +151,7 @@ export function ServicesCms({ id, data }: ServicesCmsProps) {
         <details className="group rounded-xl border border-bronze/40 bg-cream/70">
           <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 marker:hidden [&::-webkit-details-marker]:hidden">
             <span className="font-display text-lg text-charcoal">
-              Ver todos os serviços
+              {copy.servicesShowAllLabel}
             </span>
             <span className="text-bronze transition-transform group-open:rotate-45" aria-hidden>
               +
@@ -163,6 +167,7 @@ export function ServicesCms({ id, data }: ServicesCmsProps) {
                       key={service.slug || service.title}
                       service={service}
                       whatsappE164={site.whatsappE164}
+                      whatsappLabel={copy.servicesWhatsappLabel}
                     />
                   ))}
                 </ul>

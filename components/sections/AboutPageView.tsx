@@ -61,6 +61,7 @@ export type AboutPageData = {
 
 type AboutPageViewProps = {
   data: AboutPageData;
+  photoPlaceholder?: string;
 };
 
 function titleWithAccent(title: string, accent?: string | null) {
@@ -77,7 +78,10 @@ function titleWithAccent(title: string, accent?: string | null) {
   );
 }
 
-export function AboutPageView({ data }: AboutPageViewProps) {
+export function AboutPageView({
+  data,
+  photoPlaceholder = "Foto em breve",
+}: AboutPageViewProps) {
   const heroImage = resolveMediaUrl(data.heroImage, data.heroImageUrl);
   const storyImage = resolveMediaUrl(data.storyImage, data.storyImageUrl);
   const paragraphs = (data.storyParagraphs || []).filter((item) => item.text);
@@ -218,7 +222,7 @@ export function AboutPageView({ data }: AboutPageViewProps) {
                         />
                       ) : (
                         <div className="flex h-full items-end p-4 text-sm text-muted">
-                          Foto em breve
+                          {photoPlaceholder}
                         </div>
                       )}
                     </div>

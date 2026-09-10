@@ -7,6 +7,7 @@ import {
   defaultSiteSettings,
 } from "@/lib/cms/defaults";
 import { resolveMediaUrl } from "@/lib/cms/media";
+import { pickUiCopy, defaultUiCopy } from "@/lib/cms/uiCopy";
 
 export type NavItem = {
   label: string;
@@ -75,10 +76,14 @@ export async function getSiteSettings() {
           .projetoNexoLogo,
         defaultSiteSettings.projetoNexoLogoUrl,
       ),
+      uiCopy: pickUiCopy(settings as Record<string, unknown>),
     };
   } catch (error) {
     console.error("Failed to load site-settings from Payload", error);
-    return defaultSiteSettings;
+    return {
+      ...defaultSiteSettings,
+      uiCopy: defaultUiCopy,
+    };
   }
 }
 

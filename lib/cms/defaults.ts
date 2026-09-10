@@ -13,6 +13,7 @@ import {
 } from "@/lib/services";
 import { SEO } from "@/lib/seo";
 import { SITE, URGENT_WHATSAPP_MESSAGE } from "@/lib/site";
+import { defaultUiCopy } from "@/lib/cms/uiCopy";
 
 function serviceFields(service: NonNullable<ReturnType<typeof getService>>) {
   return {
@@ -57,6 +58,10 @@ export const defaultSiteSettings = {
   logoLightUrl: "/assets/nexo-services-fundo-claro.svg",
   logoDarkUrl: "/assets/nexo-services.svg",
   projetoNexoLogoUrl: "/assets/projeto-nexo-logo.svg",
+  ...defaultUiCopy,
+  formServiceOptions: defaultUiCopy.formServiceOptions.map((label) => ({
+    label,
+  })),
 };
 
 export const defaultHomepageSections = [

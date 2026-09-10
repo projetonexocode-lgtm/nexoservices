@@ -1,7 +1,10 @@
+"use client";
+
 import { PlaceholderNote } from "@/components/ui/PlaceholderNote";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CoverageMap } from "@/components/ui/CoverageMap";
 import { FinalCta } from "@/components/sections/FinalCta";
+import { useSiteContact } from "@/components/providers/SiteContactProvider";
 
 type SiteContact = {
   phoneDisplay: string;
@@ -18,6 +21,7 @@ type ContactCmsProps = {
 };
 
 export function ContactCms({ id, data, site }: ContactCmsProps) {
+  const ui = useSiteContact().copy;
   const coverageGroups =
     (data.coverageGroups as Array<{
       id?: string;
@@ -70,7 +74,9 @@ export function ContactCms({ id, data, site }: ContactCmsProps) {
                       </span>
                       <span className="mt-1.5 block text-sm text-cream/70">
                         {cities.slice(0, 3).join(", ")}
-                        {cities.length > 3 ? ` e mais ${cities.length - 3}` : ""}
+                        {cities.length > 3
+                          ? ` ${ui.coverageMorePrefix} ${cities.length - 3}`
+                          : ""}
                       </span>
                     </span>
                     <span className="shrink-0 text-gold" aria-hidden>
@@ -126,7 +132,7 @@ export function ContactCms({ id, data, site }: ContactCmsProps) {
                 <div className="pb-7">
                   {item.placeholder ? (
                     <PlaceholderNote className="mb-3">
-                      Resposta parcial — detalhe ainda a confirmar.
+                      {ui.faqPartialNote}
                     </PlaceholderNote>
                   ) : null}
                   <p className="text-base leading-relaxed text-muted">{item.answer}</p>

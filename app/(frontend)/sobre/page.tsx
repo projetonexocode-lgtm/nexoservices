@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AboutPageView } from "@/components/sections/AboutPageView";
 import { getAboutPage, getSiteSettings } from "@/lib/cms";
+import { defaultUiCopy } from "@/lib/cms/uiCopy";
 import { SITE } from "@/lib/site";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -29,6 +30,19 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function SobrePage() {
-  const about = await getAboutPage();
-  return <AboutPageView data={about} />;
+  const [about, settings] = await Promise.all([
+    getAboutPage(),
+    getSiteSettings(),
+  ]);
+  const copy =
+    "uiCopy" in settings && settings.uiCopy
+      ? settings.uiCopy
+      : defaultUiCopy;
+
+  return (
+    <AboutPageView
+      data={about}
+      photoPlaceholder={copy.aboutPhotoPlaceholder}
+    />
+  );
 }

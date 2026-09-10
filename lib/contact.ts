@@ -1,3 +1,6 @@
+import type { ContactErrorCode } from "@/lib/cms/uiCopy";
+import { defaultUiCopy } from "@/lib/cms/uiCopy";
+
 export const CONTACT_LIMITS = {
   name: 80,
   phone: 24,
@@ -5,8 +8,6 @@ export const CONTACT_LIMITS = {
   message: 1000,
   service: 80,
 } as const;
-
-export const UNKNOWN_SERVICE = "Não sei / é urgente";
 
 export type ContactPayload = {
   name: string;
@@ -18,7 +19,7 @@ export type ContactPayload = {
 
 export type ContactParseResult =
   | { ok: true; data: ContactPayload }
-  | { ok: false; error: string };
+  | { ok: false; code: ContactErrorCode };
 
 function asTrimmedString(value: unknown, max: number): string {
   if (typeof value !== "string") return "";
@@ -27,15 +28,18 @@ function asTrimmedString(value: unknown, max: number): string {
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export function parseContactPayload(input: unknown): ContactParseResult {
+export function parseContactPayload(
+  input: unknown,
+  unknownService: string = defaultUiCopy.formUnknownService,
+): ContactParseResult {
   if (typeof input !== "object" || input === null) {
-    return { ok: false, error: "O pedido chegou incompleto. Tente outra vez." };
+    return { ok: false, code: "incomplete" };
   }
 
   const record = input as Record<string, unknown>;
 
   if (typeof record.company === "string" && record.company.trim() !== "") {
-    return { ok: false, error: "O pedido não pôde ser enviado." };
+    return { ok: false, code: "honeypot" };
   }
 
   const name = asTrimmedString(record.name, CONTACT_LIMITS.name);
@@ -43,40 +47,34 @@ export function parseContactPayload(input: unknown): ContactParseResult {
   const email = asTrimmedString(record.email, CONTACT_LIMITS.email).toLowerCase();
   const message = asTrimmedString(record.message, CONTACT_LIMITS.message);
   const service =
-    asTrimmedString(record.service, CONTACT_LIMITS.service) || UNKNOWN_SERVICE;
+    asTrimmedString(record.service, CONTACT_LIMITS.service) || unknownService;
 
   if (name.length < 2) {
-    return { ok: false, error: "Indique o seu nome para sabermos a quem ligar." };
+    return { ok: false, code: "name" };
   }
 
   const digits = phone.replace(/\D/g, "");
   if (digits.length < 9 || digits.length > 15) {
-    return {
-      ok: false,
-      error: "Indique um telefone válido, com o indicativo se estiver fora de Portugal.",
-    };
+    return { ok: false, code: "phone" };
   }
 
   if (!EMAIL_PATTERN.test(email)) {
-    return {
-      ok: false,
-      error: "Indique um e-mail válido para podermos responder-lhe.",
-    };
+    return { ok: false, code: "email" };
   }
 
   if (message.length < 4) {
-    return {
-      ok: false,
-      error: "Descreva a avaria e a localidade, mesmo que seja em duas frases.",
-    };
+    return { ok: false, code: "message" };
   }
 
   return { ok: true, data: { name, phone, email, message, service } };
 }
 
-export function contactWhatsAppMessage(payload: ContactPayload): string {
+export function contactWhatsAppMessage(
+  payload: ContactPayload,
+  intro: string = defaultUiCopy.formWhatsappIntro,
+): string {
   return [
-    "Olá! Preciso de assistência técnica.",
+    intro,
     `Nome: ${payload.name}`,
     `Telefone: ${payload.phone}`,
     `E-mail: ${payload.email}`,

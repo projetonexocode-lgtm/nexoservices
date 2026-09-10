@@ -9,6 +9,7 @@ import { footerContentFromSettings } from "@/lib/cms/footer";
 import { PRIMARY_SERVICE_SLUGS, getService } from "@/lib/services";
 import { SEO, absoluteUrl } from "@/lib/seo";
 import { SITE } from "@/lib/site";
+import { defaultUiCopy } from "@/lib/cms/uiCopy";
 import "../globals.css";
 
 const outfit = Outfit({
@@ -20,10 +21,16 @@ const outfit = Outfit({
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
+  const copy =
+    "uiCopy" in settings && settings.uiCopy ? settings.uiCopy : defaultUiCopy;
   const siteUrl = settings.url || SITE.url;
   const title = settings.seoTitle || SEO.title;
   const description = settings.seoDescription || SEO.description;
   const ogImage = absoluteUrl(SEO.ogImage, siteUrl);
+  const keywords = copy.seoKeywords
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
 
   return {
     metadataBase: new URL(siteUrl),
@@ -32,7 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s · ${settings.name || SITE.name}`,
     },
     description,
-    keywords: [...SEO.keywords],
+    keywords: keywords.length ? keywords : [...SEO.keywords],
     applicationName: settings.name || SITE.name,
     authors: [{ name: settings.legalName || SITE.legalName }],
     creator: settings.name || SITE.name,
@@ -50,7 +57,7 @@ export async function generateMetadata(): Promise<Metadata> {
           url: ogImage,
           width: 1200,
           height: 630,
-          alt: SEO.ogImageAlt,
+          alt: copy.seoOgImageAlt || SEO.ogImageAlt,
         },
       ],
     },
@@ -105,6 +112,9 @@ export default async function RootLayout({
     }>,
   );
 
+  const copy =
+    "uiCopy" in settings && settings.uiCopy ? settings.uiCopy : defaultUiCopy;
+
   const siteContact = {
     name: settings.name || SITE.name,
     phoneDisplay: settings.phoneDisplay || SITE.phoneDisplay,
@@ -112,10 +122,11 @@ export default async function RootLayout({
     whatsappDisplay: settings.whatsappDisplay || SITE.whatsappDisplay,
     whatsappE164: settings.whatsappE164 || SITE.whatsappE164,
     urgentWhatsappMessage:
-      settings.urgentWhatsappMessage || "Olá! Preciso de assistência técnica urgente.",
+      settings.urgentWhatsappMessage || copy.formDefaultMessage,
     projetoNexoUrl: settings.projetoNexoUrl || SITE.projetoNexoUrl,
     logoLightUrl: settings.logoLightUrl || "/assets/nexo-services-fundo-claro.svg",
     logoDarkUrl: settings.logoDarkUrl || "/assets/nexo-services.svg",
+    copy,
   };
 
   const footerContent = footerContentFromSettings(
@@ -215,7 +226,7 @@ export default async function RootLayout({
             href="#conteudo"
             className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-charcoal focus:px-4 focus:py-2 focus:text-cream"
           >
-            Saltar para o conteúdo
+            {copy.skipToContentLabel}
           </a>
           <Header
             navItems={navItems}
