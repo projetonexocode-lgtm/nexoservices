@@ -5,17 +5,11 @@ import { ServicesCms } from "@/components/sections/ServicesCms";
 import { HeroCarousel } from "@/components/sections/HeroCarousel";
 import { CallButton } from "@/components/ui/CallButton";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
-import { sectionAnchor, type NavItem } from "@/lib/cms";
+import { resolveMediaUrl, sectionAnchor, navItemsFromSections, type NavItem } from "@/lib/cms";
 
 type MediaLike = {
   url?: string | null;
 } | string | null | undefined;
-
-export function resolveMediaUrl(media: MediaLike, fallback?: string | null): string {
-  if (typeof media === "string" && media) return media;
-  if (media && typeof media === "object" && media.url) return media.url;
-  return fallback || "";
-}
 
 type SiteContact = {
   phoneDisplay: string;
@@ -78,12 +72,17 @@ export function HomeSections({ sections, site }: HomeSectionsProps) {
 export function navFromUnknownSections(
   sections: Array<Record<string, unknown>>,
 ): NavItem[] {
-  return sections
-    .filter((section) => section.showInNav !== false && section.navLabel)
-    .map((section) => ({
-      label: String(section.navLabel),
-      href: `/#${sectionAnchor(String(section.blockType || ""))}`,
-    }));
+  return navItemsFromSections(
+    sections.map((section) => ({
+      blockType: section.blockType as string | null | undefined,
+      navLabel: section.navLabel as string | null | undefined,
+      showInNav: section.showInNav as boolean | null | undefined,
+      coverageNavLabel: section.coverageNavLabel as string | null | undefined,
+      faqNavLabel: section.faqNavLabel as string | null | undefined,
+      showCoverageInNav: section.showCoverageInNav as boolean | null | undefined,
+      showFaqInNav: section.showFaqInNav as boolean | null | undefined,
+    })),
+  );
 }
 
 function dataItems(section: Record<string, unknown>) {

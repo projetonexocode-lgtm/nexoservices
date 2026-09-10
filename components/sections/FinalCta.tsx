@@ -29,6 +29,7 @@ const SERVICE_OPTIONS = [
 type FormStatus = "idle" | "loading" | "success" | "error";
 
 type FinalCtaProps = {
+  id?: string;
   title?: string;
   titleAccent?: string;
   supportText?: string;
@@ -38,6 +39,7 @@ type FinalCtaProps = {
 };
 
 export function FinalCta({
+  id = "contacto",
   title = "Deixe o número.",
   titleAccent = "Ligamos nós.",
   supportText = "Ou fale já connosco. O WhatsApp leva a descrição que escrever ao lado.",
@@ -131,7 +133,10 @@ export function FinalCta({
   }
 
   return (
-    <section className="bg-sand px-6 py-[clamp(4.5rem,8vw,8.1rem)] sm:px-8">
+    <section
+      id={id}
+      className="scroll-mt-28 bg-sand px-6 py-[clamp(4.5rem,8vw,8.1rem)] sm:px-8"
+    >
       <div className="mx-auto grid max-w-6xl items-start gap-[clamp(2.1rem,5vw,4.4rem)] [grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))]">
         <div>
           <h2 className="max-w-[16ch] font-display text-[clamp(2rem,4.2vw,3.5rem)] leading-[1.05] tracking-[-0.025em] text-charcoal">

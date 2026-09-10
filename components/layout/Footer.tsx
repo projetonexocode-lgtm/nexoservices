@@ -23,7 +23,7 @@ export function Footer({ content }: FooterProps) {
       <div className="mx-auto max-w-6xl">
         <div className="grid gap-10 border-b border-gold/20 pb-10 lg:grid-cols-[1.15fr_0.95fr_1.45fr] lg:gap-14">
           <div>
-            <Logo tone="dark" className="mb-4" />
+            <Logo tone="dark" src={site.logoDarkUrl} className="mb-4" />
             <p className="mb-6 max-w-[32ch] text-[15px] leading-relaxed text-cream/75">
               {content.blurb}
             </p>
@@ -135,21 +135,29 @@ export function Footer({ content }: FooterProps) {
             </ul>
           </div>
 
-          <div>
+          <div className="flex flex-col items-center text-center">
             <p className="mb-3 text-sm uppercase tracking-[0.08em] text-gold">
               {content.alsoDoTitle}
             </p>
-            <p className="mb-4 max-w-[28ch] text-[15px] leading-relaxed text-cream/75">
+            <p className="mb-5 max-w-[28ch] text-[15px] leading-relaxed text-cream/75">
               {content.alsoDoText}
             </p>
-            {content.alsoDoUrl && content.alsoDoLabel ? (
+            {content.alsoDoUrl ? (
               <a
                 href={content.alsoDoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-11 items-center rounded-xl border border-gold/55 px-4 text-[14px] text-gold transition-colors hover:bg-gold/15"
+                className="inline-flex w-full max-w-[12.25rem] justify-center transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold sm:max-w-[14rem]"
+                aria-label={`${content.alsoDoLabel} — abrir site`}
               >
-                {content.alsoDoLabel}
+                <img
+                  src={content.projetoNexoLogoUrl}
+                  alt={content.alsoDoLabel}
+                  width={224}
+                  height={80}
+                  className="h-auto w-full object-contain"
+                  decoding="async"
+                />
               </a>
             ) : null}
           </div>

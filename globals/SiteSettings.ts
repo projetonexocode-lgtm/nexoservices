@@ -51,6 +51,31 @@ export const SiteSettings: GlobalConfig = {
               type: "row",
               fields: [
                 {
+                  name: "logoLight",
+                  type: "upload",
+                  relationTo: "media",
+                  label: "Logo — fundo claro",
+                  admin: {
+                    description:
+                      "Usada no header (fundo cream). Preferir a versão escura do wordmark.",
+                  },
+                },
+                {
+                  name: "logoDark",
+                  type: "upload",
+                  relationTo: "media",
+                  label: "Logo — fundo escuro",
+                  admin: {
+                    description:
+                      "Usada no footer (fundo charcoal). Preferir a versão clara/branca do wordmark.",
+                  },
+                },
+              ],
+            },
+            {
+              type: "row",
+              fields: [
+                {
                   name: "googleRating",
                   type: "text",
                   label: "Nota Google",
@@ -199,18 +224,31 @@ export const SiteSettings: GlobalConfig = {
               type: "row",
               fields: [
                 {
-                  name: "alsoDoLabel",
-                  type: "text",
-                  label: "Label do botão",
-                  defaultValue: "projetonexo.pt",
+                  name: "projetoNexoLogo",
+                  type: "upload",
+                  relationTo: "media",
+                  label: "Logo Projeto Nexo",
+                  admin: {
+                    description:
+                      "Substitui o botão no footer (fundo escuro). Preferir a versão clara/branca.",
+                  },
                 },
                 {
                   name: "projetoNexoUrl",
                   type: "text",
-                  label: "URL do botão",
+                  label: "URL Projeto Nexo",
                   defaultValue: "https://projetonexo.pt",
                 },
               ],
+            },
+            {
+              name: "alsoDoLabel",
+              type: "text",
+              label: "Nome acessível (alt)",
+              defaultValue: "Projeto Nexo",
+              admin: {
+                description: "Texto alternativo da logo no link do footer.",
+              },
             },
             {
               name: "warrantyText",

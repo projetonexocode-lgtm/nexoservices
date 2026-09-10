@@ -26,7 +26,7 @@ export const Homepage: GlobalConfig = {
       minRows: 1,
       admin: {
         description:
-          "Arraste para reordenar. O menu do header segue exactamente esta ordem (secções com «Mostrar no menu» activo).",
+          "Arraste para reordenar. O menu do header segue esta ordem. «Sobre» aponta para a página /sobre (editável em Página Sobre).",
       },
     },
   ],

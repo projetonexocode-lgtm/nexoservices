@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
   buildWhatsAppHref,
@@ -18,6 +19,14 @@ type HeaderProps = {
   googleReviewsUrl?: string;
 };
 
+function navLinkClass(href: string, pathname: string, base: string) {
+  const active =
+    href.startsWith("/") && !href.startsWith("/#")
+      ? pathname === href || pathname.startsWith(`${href}/`)
+      : false;
+  return `${base} ${active ? "text-charcoal" : "text-muted hover:text-charcoal"}`;
+}
+
 export function Header({
   navItems,
   announcement = "Prioridade Lisboa e Margem Sul · nacional sob pedido",
@@ -26,6 +35,7 @@ export function Header({
 }: HeaderProps) {
   const [open, setOpen] = useState(false);
   const site = useSiteContact();
+  const pathname = usePathname();
 
   return (
     <>
@@ -42,7 +52,7 @@ export function Header({
             className="min-w-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bronze"
             aria-label={`${site.name} — início`}
           >
-            <Logo />
+            <Logo tone="light" src={site.logoLightUrl} />
           </Link>
 
           <nav
@@ -53,7 +63,11 @@ export function Header({
               <Link
                 key={item.href}
                 href={item.href}
-                className="uppercase tracking-[0.06em] text-muted transition-colors hover:text-charcoal"
+                className={navLinkClass(
+                  item.href,
+                  pathname,
+                  "uppercase tracking-[0.06em] transition-colors",
+                )}
               >
                 {item.label}
               </Link>

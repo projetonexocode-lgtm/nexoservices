@@ -114,6 +114,8 @@ export default async function RootLayout({
     urgentWhatsappMessage:
       settings.urgentWhatsappMessage || "Olá! Preciso de assistência técnica urgente.",
     projetoNexoUrl: settings.projetoNexoUrl || SITE.projetoNexoUrl,
+    logoLightUrl: settings.logoLightUrl || "/assets/nexo-services-fundo-claro.svg",
+    logoDarkUrl: settings.logoDarkUrl || "/assets/nexo-services.svg",
   };
 
   const footerContent = footerContentFromSettings(
@@ -132,8 +134,8 @@ export default async function RootLayout({
     name: siteContact.name,
     legalName: settings.legalName || SITE.legalName,
     url: siteUrl,
-    image: absoluteUrl(SEO.ogImage, siteUrl),
-    logo: absoluteUrl(SEO.ogImage, siteUrl),
+    image: absoluteUrl(siteContact.logoLightUrl || SEO.ogImage, siteUrl),
+    logo: absoluteUrl(siteContact.logoLightUrl || SEO.ogImage, siteUrl),
     description: settings.seoDescription || SEO.description,
     telephone: siteContact.phoneTel,
     email: settings.contactEmail || SITE.contactEmail,

@@ -1,24 +1,24 @@
 type LogoProps = {
+  /** `light` = logo for cream/light backgrounds; `dark` = logo for charcoal/dark backgrounds */
   tone?: "light" | "dark";
   className?: string;
+  src?: string;
 };
 
-export function Logo({ tone = "light", className = "" }: LogoProps) {
-  const nexoColor = tone === "dark" ? "text-cream" : "text-charcoal";
-  const servicesColor = tone === "dark" ? "text-gold" : "text-bronze";
+const FALLBACK_SRC = {
+  light: "/assets/nexo-services-fundo-claro.svg",
+  dark: "/assets/nexo-services.svg",
+} as const;
 
+export function Logo({ tone = "light", className = "", src }: LogoProps) {
   return (
-    <span className={`inline-flex items-baseline gap-2 ${className}`}>
-      <span
-        className={`font-display text-[1.1rem] leading-none tracking-[0.04em] sm:text-[1.25rem] ${nexoColor}`}
-      >
-        Nexo
-      </span>
-      <span
-        className={`font-display text-[0.8rem] leading-none tracking-[0.08em] sm:text-sm ${servicesColor}`}
-      >
-        Services
-      </span>
-    </span>
+    <img
+      src={src || FALLBACK_SRC[tone]}
+      alt="Nexo Services"
+      width={220}
+      height={88}
+      className={`h-10 w-auto sm:h-11 ${className}`}
+      decoding="async"
+    />
   );
 }

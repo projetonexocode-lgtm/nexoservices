@@ -13,6 +13,7 @@ export type FooterContent = {
   alsoDoText: string;
   alsoDoLabel: string;
   alsoDoUrl: string;
+  projetoNexoLogoUrl: string;
   warrantyText: string;
 };
 
@@ -60,6 +61,9 @@ export function footerContentFromSettings(
     alsoDoText: String(settings.alsoDoText || defaults.alsoDoText),
     alsoDoLabel: String(settings.alsoDoLabel || defaults.alsoDoLabel),
     alsoDoUrl: String(settings.projetoNexoUrl || defaults.projetoNexoUrl),
+    projetoNexoLogoUrl: String(
+      settings.projetoNexoLogoUrl || defaults.projetoNexoLogoUrl,
+    ),
     warrantyText: String(settings.warrantyText || defaults.warrantyText),
   };
 }

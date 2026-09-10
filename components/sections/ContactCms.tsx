@@ -32,8 +32,11 @@ export function ContactCms({ id, data, site }: ContactCmsProps) {
     }> | undefined) || [];
 
   return (
-    <div id={id} className="scroll-mt-28">
-      <section className="bg-sand px-6 py-[clamp(4.5rem,8vw,8.1rem)] sm:px-8">
+    <div>
+      <section
+        id="cobertura"
+        className="scroll-mt-28 bg-sand px-6 py-[clamp(4.5rem,8vw,8.1rem)] sm:px-8"
+      >
         <div className="mx-auto max-w-[1100px]">
           <div className="mb-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,380px)] lg:items-start lg:gap-12">
             <div>
@@ -91,7 +94,10 @@ export function ContactCms({ id, data, site }: ContactCmsProps) {
         </div>
       </section>
 
-      <section className="bg-cream px-6 py-[clamp(4.5rem,8vw,8.1rem)] sm:px-8">
+      <section
+        id="faq"
+        className="scroll-mt-28 bg-cream px-6 py-[clamp(4.5rem,8vw,8.1rem)] sm:px-8"
+      >
         <div className="mx-auto max-w-[900px]">
           <SectionHeading
             title={String(data.faqTitle || "FAQ")}
@@ -132,6 +138,7 @@ export function ContactCms({ id, data, site }: ContactCmsProps) {
       </section>
 
       <FinalCta
+        id={id}
         title={String(data.title || "Deixe o número.")}
         titleAccent={(data.titleAccent as string) || undefined}
         supportText={(data.supportText as string) || undefined}

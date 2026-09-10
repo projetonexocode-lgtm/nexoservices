@@ -17,9 +17,19 @@ const navFields = [
 
 export const AboutBlock: Block = {
   slug: "about",
-  labels: { singular: "Sobre", plural: "Sobre" },
+  labels: { singular: "Hero (homepage)", plural: "Hero (homepage)" },
   fields: [
-    ...navFields,
+    ...navFields.map((field) =>
+      field.name === "navLabel"
+        ? {
+            ...field,
+            admin: {
+              description:
+                "No menu, este item abre a página /sobre (conteúdo em «Página Sobre»).",
+            },
+          }
+        : field,
+    ),
     {
       name: "brandName",
       type: "text",
@@ -293,6 +303,40 @@ export const ContactBlock: Block = {
   labels: { singular: "Contacto", plural: "Contacto" },
   fields: [
     ...navFields,
+    {
+      type: "row",
+      fields: [
+        {
+          name: "showCoverageInNav",
+          type: "checkbox",
+          label: "Mostrar Cobertura no menu",
+          defaultValue: true,
+        },
+        {
+          name: "coverageNavLabel",
+          type: "text",
+          label: "Label Cobertura no menu",
+          defaultValue: "Cobertura",
+        },
+      ],
+    },
+    {
+      type: "row",
+      fields: [
+        {
+          name: "showFaqInNav",
+          type: "checkbox",
+          label: "Mostrar FAQ no menu",
+          defaultValue: true,
+        },
+        {
+          name: "faqNavLabel",
+          type: "text",
+          label: "Label FAQ no menu",
+          defaultValue: "FAQ",
+        },
+      ],
+    },
     {
       name: "title",
       type: "text",

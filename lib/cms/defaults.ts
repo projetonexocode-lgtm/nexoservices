@@ -52,8 +52,11 @@ export const defaultSiteSettings = {
   footerCertificates: FOOTER_CERTIFICATES.map((label) => ({ label })),
   alsoDoTitle: "Também fazemos",
   alsoDoText: "Obras, remodelações e reabilitação de imóveis.",
-  alsoDoLabel: "projetonexo.pt",
+  alsoDoLabel: "Projeto Nexo",
   warrantyText: "Garantia até 3 anos, conforme o serviço.",
+  logoLightUrl: "/assets/nexo-services-fundo-claro.svg",
+  logoDarkUrl: "/assets/nexo-services.svg",
+  projetoNexoLogoUrl: "/assets/projeto-nexo-logo.svg",
 };
 
 export const defaultHomepageSections = [
@@ -154,6 +157,10 @@ export const defaultHomepageSections = [
     blockType: "contact" as const,
     navLabel: "Contacto",
     showInNav: true,
+    showCoverageInNav: true,
+    coverageNavLabel: "Cobertura",
+    showFaqInNav: true,
+    faqNavLabel: "FAQ",
     title: "Deixe o número.",
     titleAccent: "Ligamos nós.",
     supportText:
@@ -173,3 +180,57 @@ export const defaultHomepageSections = [
     })),
   },
 ];
+
+export const defaultAboutPage = {
+  heroEyebrow: "Sobre nós",
+  heroTitle: "Técnicos de confiança ao domicílio",
+  heroTitleAccent: "ao domicílio",
+  heroLead:
+    "A Nexo Services coordena reparações urgentes e serviços especializados em Lisboa, Área Metropolitana e Margem Sul — com orçamento claro antes de começar e garantia no trabalho.",
+  heroImageUrl: "/nexo-services/canalizacao.jpg",
+  storyTitle: "A nossa história",
+  storyParagraphs: [
+    {
+      text: "A Nexo Services nasceu para resolver um problema simples: quando há uma avaria em casa, precisa de alguém de confiança, rápido e transparente.",
+    },
+    {
+      text: "Coordenamos uma rede de técnicos parceiros especializados — canalização, eletricidade, desentupimentos e muito mais — para enviar quem pode resolver na sua zona.",
+    },
+    {
+      text: "Trabalhamos com prioridade em Lisboa e Margem Sul. No resto do país, mediante disponibilidade. Em todos os serviços emitimos fatura com NIF e oferecemos garantia até 3 anos, conforme o trabalho executado.",
+    },
+  ],
+  storyImageUrl: "/nexo-services/eletricidade.jpg",
+  valuesEyebrow: "Como trabalhamos",
+  valuesTitle: "O que nos define",
+  valuesIntro:
+    "A mesma lógica em cada pedido: diagnóstico honesto, orçamento aprovado por si e reparação com responsabilidade.",
+  values: DIFFERENTIALS.map((item) => ({
+    title: item.title,
+    body: item.body,
+  })),
+  teamEnabled: false,
+  teamTitle: "A nossa equipa",
+  teamSubtitle: "As pessoas por detrás da coordenação e do serviço.",
+  teamMembers: [],
+  extraSections: [
+    {
+      title: "Zona de cobertura",
+      body: "Atendimento prioritário em Lisboa, Área Metropolitana e Margem Sul. Cobertura nacional sob pedido, conforme disponibilidade dos técnicos parceiros.",
+      imageUrl: "",
+    },
+    {
+      title: "Garantia e faturação",
+      body: "Todas as reparações incluem garantia até 3 anos, conforme o serviço. Emitimos fatura com NIF em todos os trabalhos.",
+      imageUrl: "",
+    },
+  ],
+  ctaTitle: "Precisa de ajuda em casa?",
+  ctaBody:
+    "Fale connosco agora. Explicamos o próximo passo e enviamos um técnico à sua zona.",
+  ctaLabel: "Falar connosco",
+  ctaHref: "/#contacto",
+  seoTitle: "Sobre nós | Nexo Services",
+  seoDescription:
+    "Conheça a Nexo Services: reparações urgentes ao domicílio em Lisboa e Margem Sul, com orçamento antes de começar e garantia até 3 anos.",
+};

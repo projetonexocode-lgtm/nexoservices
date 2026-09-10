@@ -15,6 +15,8 @@ export type SiteContactValue = {
   whatsappE164: string;
   urgentWhatsappMessage: string;
   projetoNexoUrl: string;
+  logoLightUrl: string;
+  logoDarkUrl: string;
 };
 
 const defaults: SiteContactValue = {
@@ -25,6 +27,8 @@ const defaults: SiteContactValue = {
   whatsappE164: SITE.whatsappE164,
   urgentWhatsappMessage: URGENT_WHATSAPP_MESSAGE,
   projetoNexoUrl: SITE.projetoNexoUrl,
+  logoLightUrl: "/assets/nexo-services-fundo-claro.svg",
+  logoDarkUrl: "/assets/nexo-services.svg",
 };
 
 const SiteContactContext = createContext<SiteContactValue>(defaults);

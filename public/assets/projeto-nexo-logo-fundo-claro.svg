@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="30 15 960 340" width="960" height="340" role="img" aria-label="Projeto Nexo — Renove &amp; Inspire">
+  <defs>
+    <linearGradient id="pnGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3d2412"></stop>
+      <stop offset="28%" stop-color="#734A26"></stop>
+      <stop offset="52%" stop-color="#D9984A"></stop>
+      <stop offset="74%" stop-color="#734A26"></stop>
+      <stop offset="100%" stop-color="#3d2412"></stop>
+    </linearGradient>
+    <linearGradient id="pnSilver" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0%" stop-color="#5a5a62"></stop>
+      <stop offset="40%" stop-color="#2a2a2e"></stop>
+      <stop offset="62%" stop-color="#0B0B0D"></stop>
+      <stop offset="100%" stop-color="#3a3a40"></stop>
+    </linearGradient>
+    <linearGradient id="pnSilverText" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5a5a62"></stop>
+      <stop offset="45%" stop-color="#0B0B0D"></stop>
+      <stop offset="55%" stop-color="#2a2a2e"></stop>
+      <stop offset="100%" stop-color="#0B0B0D"></stop>
+    </linearGradient>
+    <linearGradient id="pnGoldText" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#734A26"></stop>
+      <stop offset="50%" stop-color="#D9984A"></stop>
+      <stop offset="100%" stop-color="#734A26"></stop>
+    </linearGradient>
+  </defs>
+
+  <g id="mark" transform="translate(40,30)">
+    
+    <path d="M170 8 L288 76 L288 212 L170 280 L52 212 L52 76 Z" fill="none" stroke="url(#pnGold)" stroke-width="15" stroke-linejoin="miter"></path>
+    
+    <g fill="url(#pnGold)">
+      <rect x="104" y="60" width="7" height="182"></rect>
+      <rect x="121" y="52" width="7" height="190"></rect>
+      <rect x="138" y="44" width="7" height="198"></rect>
+      <rect x="155" y="36" width="7" height="206"></rect>
+    </g>
+    
+    <path d="M178 96 L266 148 L266 268 L232 248 L232 176 L178 144 Z" fill="url(#pnSilver)"></path>
+    <g fill="#F2F2F2" opacity="0.5">
+      <rect x="196" y="160" width="6" height="72"></rect>
+      <rect x="208" y="167" width="6" height="72"></rect>
+      <rect x="220" y="174" width="6" height="72"></rect>
+    </g>
+    
+    <path d="M40 214 L196 262 L190 276 L36 228 Z" fill="url(#pnGold)"></path>
+    <path d="M74 246 L214 288 L208 301 L70 260 Z" fill="url(#pnSilver)" opacity="0.9"></path>
+  </g>
+
+  <g font-family="Montserrat, 'Helvetica Neue', Helvetica, Arial, sans-serif" text-anchor="start">
+    <text x="395" y="132" font-size="52" letter-spacing="16" fill="url(#pnGoldText)" font-weight="400">PROJETO</text>
+    <text x="392" y="248" font-size="122" letter-spacing="2" fill="url(#pnSilverText)" font-weight="700">NEXO</text>
+    <g fill="#0B0B0D">
+      <rect x="396" y="306" width="34" height="4"></rect>
+      <text x="452" y="322" font-size="52" font-weight="400">Renove &amp; Inspire</text>
+      <rect x="908" y="306" width="34" height="4"></rect>
+    </g>
+  </g>
+</svg>
