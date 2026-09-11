@@ -13,7 +13,7 @@ export type SocialLink = {
   network: SocialNetwork;
   url: string;
   enabled: boolean;
-  label?: string;
+  label: string;
 };
 
 export function socialNetworkLabel(network: string): string {
@@ -60,25 +60,33 @@ type SocialLinkRow = {
   label?: string | null;
 } | null;
 
+function toSocialLink(
+  network: SocialNetwork,
+  url: string,
+  label?: string | null,
+): SocialLink {
+  return {
+    network,
+    url,
+    enabled: true,
+    label: label?.trim() || socialNetworkLabel(network),
+  };
+}
+
 export function socialLinksFromSettings(
   settings: Record<string, unknown>,
 ): SocialLink[] {
   const rows = settings.socialLinks as SocialLinkRow[] | null | undefined;
   if (Array.isArray(rows) && rows.length > 0) {
-    return rows
-      .map((row) => {
-        if (!row || !isSocialNetwork(row.network)) return null;
-        const url = String(row.url || "").trim();
-        if (!isUsableSocialUrl(url)) return null;
-        if (row.enabled === false) return null;
-        return {
-          network: row.network,
-          url,
-          enabled: true,
-          label: row.label?.trim() || socialNetworkLabel(row.network),
-        };
-      })
-      .filter((link): link is SocialLink => Boolean(link));
+    const links: SocialLink[] = [];
+    for (const row of rows) {
+      if (!row || !isSocialNetwork(row.network)) continue;
+      const url = String(row.url || "").trim();
+      if (!isUsableSocialUrl(url)) continue;
+      if (row.enabled === false) continue;
+      links.push(toSocialLink(row.network, url, row.label));
+    }
+    return links;
   }
 
   // Legacy single-URL fields (pre socialLinks array).
@@ -88,16 +96,11 @@ export function socialLinksFromSettings(
     ["linkedin", settings.linkedinUrl],
   ];
 
-  return legacy
-    .map(([network, raw]) => {
-      const url = String(raw || "").trim();
-      if (!isUsableSocialUrl(url)) return null;
-      return {
-        network,
-        url,
-        enabled: true,
-        label: socialNetworkLabel(network),
-      };
-    })
-    .filter((link): link is SocialLink => Boolean(link));
+  const links: SocialLink[] = [];
+  for (const [network, raw] of legacy) {
+    const url = String(raw || "").trim();
+    if (!isUsableSocialUrl(url)) continue;
+    links.push(toSocialLink(network, url));
+  }
+  return links;
 }
