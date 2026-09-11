@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Outfit } from "next/font/google";
+import { Montserrat, Outfit } from "next/font/google";
 import { Footer } from "@/components/layout/Footer";
 import { FloatingCta } from "@/components/layout/FloatingCta";
 import { Header } from "@/components/layout/Header";
@@ -16,6 +16,13 @@ const outfit = Outfit({
   subsets: ["latin", "latin-ext"],
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-outfit",
+  display: "swap",
+});
+
+const montserrat = Montserrat({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "600"],
+  variable: "--font-montserrat",
   display: "swap",
 });
 
@@ -201,7 +208,7 @@ export default async function RootLayout({
   return (
     <html
       lang="pt-PT"
-      className={`${outfit.variable} h-full scroll-smooth antialiased`}
+      className={`${outfit.variable} ${montserrat.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-full flex-col bg-cream font-sans text-charcoal">
         <script

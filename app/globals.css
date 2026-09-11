@@ -28,6 +28,14 @@ body {
   letter-spacing: 0.02em;
 }
 
+/* Inline brand mark — keep vectors sharp in sticky header on retina Safari */
+.nx-logo {
+  display: block;
+  flex-shrink: 0;
+  text-rendering: geometricPrecision;
+  shape-rendering: geometricPrecision;
+}
+
 h1,
 h2 {
   text-transform: uppercase;

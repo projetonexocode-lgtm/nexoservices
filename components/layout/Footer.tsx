@@ -126,11 +126,26 @@ export function Footer({ content }: FooterProps) {
             <p className="mb-3 text-sm uppercase tracking-[0.08em] text-gold">
               {copy.footerCertificatesTitle}
             </p>
-            <ul className="flex flex-col gap-2 text-[15px] text-cream">
-              {content.certificates.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
+            <div className="flex flex-col gap-3">
+              <ul className="flex flex-col gap-2 text-[15px] text-cream">
+                {content.certificates.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <div className="flex flex-col gap-1 text-[13px] leading-snug text-cream/80 sm:text-[14px]">
+                {content.certificateCompany ? (
+                  <p className="font-medium text-cream">
+                    {content.certificateCompany}
+                  </p>
+                ) : null}
+                {content.certificateNipc ? (
+                  <p>NIPC: {content.certificateNipc}</p>
+                ) : null}
+                {content.certificateLicense ? (
+                  <p>{content.certificateLicense}</p>
+                ) : null}
+              </div>
+            </div>
           </div>
 
           <div className="flex flex-col items-center text-center">
@@ -163,7 +178,8 @@ export function Footer({ content }: FooterProps) {
 
         <div className="flex flex-wrap items-center justify-between gap-3 pt-6 text-sm">
           <span className="text-cream/60">
-            © {new Date().getFullYear()} {site.name}. {copy.footerCopyrightSuffix}
+            © {new Date().getFullYear()} {site.name}.{" "}
+            {copy.footerCopyrightSuffix}
           </span>
           <span className="font-medium text-gold">{content.warrantyText}</span>
         </div>
@@ -233,7 +249,13 @@ function InstagramIcon() {
 
 function FacebookIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+    >
       <path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H7v3h3v7h3v-7h3.1l.9-3H13v-2c0-.6.4-1 1-1z" />
     </svg>
   );
@@ -241,7 +263,13 @@ function FacebookIcon() {
 
 function LinkedInIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+    >
       <path d="M6.5 9.5H3.7V20h2.8V9.5zM5.1 4C4.1 4 3.3 4.8 3.3 5.8S4.1 7.6 5.1 7.6 6.9 6.8 6.9 5.8 6.1 4 5.1 4zM20.3 13.2c0-2.4-1.3-3.5-3-3.5-1.4 0-2 .7-2.4 1.3V9.5h-2.8c0 .4 0 10.5 0 10.5h2.8v-5.9c0-.3 0-.6.1-.9.3-.6.9-1.3 1.9-1.3 1.3 0 1.9.9 1.9 2.4V20h2.8v-6.8z" />
     </svg>
   );
@@ -249,7 +277,13 @@ function LinkedInIcon() {
 
 function YouTubeIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+    >
       <path d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C18 5 12 5 12 5s-6 0-7.7.3A2.7 2.7 0 0 0 2.4 7.2 28.6 28.6 0 0 0 2 12a28.6 28.6 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.9C6 19 12 19 12 19s6 0 7.7-.3a2.7 2.7 0 0 0 1.9-1.9A28.6 28.6 0 0 0 22 12a28.6 28.6 0 0 0-.4-4.8zM10 15.2V8.8L15.5 12 10 15.2z" />
     </svg>
   );
@@ -257,7 +291,13 @@ function YouTubeIcon() {
 
 function TikTokIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+    >
       <path d="M19.6 7.4a5.8 5.8 0 0 1-3.4-1.1v7.2a5.7 5.7 0 1 1-4.9-5.6v2.8a2.9 2.9 0 1 0 2.1 2.8V2.5h2.8c.2 1.6 1.2 3.1 2.6 4 1 .6 2.1.9 3.2.9v2.8c-.8 0-1.6-.2-2.4-.4z" />
     </svg>
   );
@@ -265,7 +305,13 @@ function TikTokIcon() {
 
 function XIcon() {
   return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden
+    >
       <path d="M18.2 2H21l-6.6 7.5L22 22h-6.2l-4.9-6.4L5.3 22H2.5l7-8L2 2h6.3l4.4 5.8L18.2 2zm-1.1 18h1.7L7 3.9H5.2L17.1 20z" />
     </svg>
   );

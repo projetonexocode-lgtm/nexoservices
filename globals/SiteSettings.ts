@@ -236,6 +236,10 @@ export const SiteSettings: GlobalConfig = {
               name: "footerCertificates",
               type: "array",
               label: "Certificados",
+              admin: {
+                description:
+                  "Ex.: IMPIC. Os dados legais abaixo aparecem sob esta lista.",
+              },
               fields: [
                 {
                   name: "label",
@@ -243,6 +247,25 @@ export const SiteSettings: GlobalConfig = {
                   required: true,
                 },
               ],
+            },
+            {
+              name: "certificateCompany",
+              type: "text",
+              label: "Empresa (certificado)",
+              defaultValue: "RARO & INQUEBRAVEL LDA",
+            },
+            {
+              name: "certificateNipc",
+              type: "text",
+              label: "NIPC",
+              defaultValue: "519395026",
+            },
+            {
+              name: "certificateLicense",
+              type: "textarea",
+              label: "Alvará / licença",
+              defaultValue:
+                "Alvará Obras Particulares IMPIC - 121548 - PAR",
             },
             {
               name: "alsoDoTitle",

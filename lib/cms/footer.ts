@@ -11,6 +11,9 @@ export type FooterContent = {
   services: string[];
   partners: string[];
   certificates: string[];
+  certificateCompany: string;
+  certificateNipc: string;
+  certificateLicense: string;
   alsoDoTitle: string;
   alsoDoText: string;
   alsoDoLabel: string;
@@ -51,6 +54,15 @@ export function footerContentFromSettings(
     certificates: labelsFromRows(
       settings.footerCertificates as LabelRow[],
       defaults.footerCertificates.map((item) => item.label),
+    ),
+    certificateCompany: String(
+      settings.certificateCompany || defaults.certificateCompany,
+    ),
+    certificateNipc: String(
+      settings.certificateNipc || defaults.certificateNipc,
+    ),
+    certificateLicense: String(
+      settings.certificateLicense || defaults.certificateLicense,
     ),
     alsoDoTitle: String(settings.alsoDoTitle || defaults.alsoDoTitle),
     alsoDoText: String(settings.alsoDoText || defaults.alsoDoText),
