@@ -182,20 +182,7 @@ export default async function RootLayout({
       },
     ],
     knowsAbout: serviceNames,
-    sameAs: (
-      [
-        settings.instagramUrl,
-        settings.facebookUrl,
-        settings.linkedinUrl,
-      ] as Array<string | null | undefined>
-    ).filter((url): url is string => {
-      if (!url) return false;
-      return (
-        !url.endsWith("instagram.com/") &&
-        !url.endsWith("facebook.com/") &&
-        !url.endsWith("linkedin.com/")
-      );
-    }),
+    sameAs: footerContent.socialLinks.map((link) => link.url),
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: "Serviços de reparação ao domicílio",

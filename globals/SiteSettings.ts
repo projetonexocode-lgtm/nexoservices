@@ -153,22 +153,57 @@ export const SiteSettings: GlobalConfig = {
                 "Reparações ao domicílio com prioridade em Lisboa e Margem Sul. No resto do país, mediante disponibilidade.",
             },
             {
-              type: "row",
+              name: "socialLinks",
+              type: "array",
+              label: "Redes sociais",
+              labels: { singular: "Rede", plural: "Redes" },
+              admin: {
+                description:
+                  "Só aparecem no rodapé as redes com «Activo» e URL preenchida.",
+              },
               fields: [
                 {
-                  name: "instagramUrl",
-                  type: "text",
-                  label: "Instagram",
+                  type: "row",
+                  fields: [
+                    {
+                      name: "network",
+                      type: "select",
+                      label: "Rede",
+                      required: true,
+                      options: [
+                        { label: "Instagram", value: "instagram" },
+                        { label: "Facebook", value: "facebook" },
+                        { label: "LinkedIn", value: "linkedin" },
+                        { label: "YouTube", value: "youtube" },
+                        { label: "TikTok", value: "tiktok" },
+                        { label: "X", value: "x" },
+                      ],
+                    },
+                    {
+                      name: "enabled",
+                      type: "checkbox",
+                      label: "Activo",
+                      defaultValue: true,
+                    },
+                  ],
                 },
                 {
-                  name: "facebookUrl",
+                  name: "url",
                   type: "text",
-                  label: "Facebook",
+                  label: "URL do perfil",
+                  required: true,
+                  admin: {
+                    placeholder: "https://…",
+                  },
                 },
                 {
-                  name: "linkedinUrl",
+                  name: "label",
                   type: "text",
-                  label: "LinkedIn",
+                  label: "Nome acessível (opcional)",
+                  admin: {
+                    description:
+                      "Usado em aria-label. Se vazio, usa o nome da rede.",
+                  },
                 },
               ],
             },

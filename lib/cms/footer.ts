@@ -1,11 +1,13 @@
 import { defaultSiteSettings } from "@/lib/cms/defaults";
+import {
+  socialLinksFromSettings,
+  type SocialLink,
+} from "@/lib/cms/social";
 
 export type FooterContent = {
   blurb: string;
   contactEmail: string;
-  instagramUrl: string;
-  facebookUrl: string;
-  linkedinUrl: string;
+  socialLinks: SocialLink[];
   services: string[];
   partners: string[];
   certificates: string[];
@@ -35,16 +37,9 @@ export function footerContentFromSettings(
   const defaults = defaultSiteSettings;
 
   return {
-    blurb:
-      String(settings.footerBlurb || defaults.footerBlurb),
-    contactEmail: String(
-      settings.contactEmail || defaults.contactEmail,
-    ),
-    instagramUrl: String(
-      settings.instagramUrl || defaults.instagramUrl || "",
-    ),
-    facebookUrl: String(settings.facebookUrl || defaults.facebookUrl || ""),
-    linkedinUrl: String(settings.linkedinUrl || defaults.linkedinUrl || ""),
+    blurb: String(settings.footerBlurb || defaults.footerBlurb),
+    contactEmail: String(settings.contactEmail || defaults.contactEmail),
+    socialLinks: socialLinksFromSettings(settings),
     services: labelsFromRows(
       settings.footerServices as LabelRow[],
       defaults.footerServices.map((item) => item.label),

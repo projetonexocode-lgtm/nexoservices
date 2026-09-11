@@ -14,11 +14,6 @@ export const SITE = {
   phoneTel: "+351214062942",
   contactEmail: "contacto@nexoservices.pt",
   projetoNexoUrl: "https://projetonexo.pt",
-  social: {
-    instagram: "https://www.instagram.com/",
-    facebook: "https://www.facebook.com/",
-    linkedin: "https://www.linkedin.com/",
-  },
 } as const;
 
 export const URGENT_WHATSAPP_MESSAGE =

@@ -45,9 +45,12 @@ export const defaultSiteSettings = {
   googleReviewsUrl: "",
   footerBlurb:
     "Reparações ao domicílio com prioridade em Lisboa e Margem Sul. No resto do país, mediante disponibilidade.",
-  instagramUrl: SITE.social.instagram,
-  facebookUrl: SITE.social.facebook,
-  linkedinUrl: SITE.social.linkedin,
+  socialLinks: [] as Array<{
+    network: "instagram" | "facebook" | "linkedin" | "youtube" | "tiktok" | "x";
+    url: string;
+    enabled: boolean;
+    label?: string;
+  }>,
   footerServices: FOOTER_SERVICES.map((label) => ({ label })),
   footerPartners: FOOTER_PARTNERS.map((label) => ({ label })),
   footerCertificates: FOOTER_CERTIFICATES.map((label) => ({ label })),
