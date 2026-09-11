@@ -101,11 +101,11 @@ export function AboutPageView({
             alt=""
             fill
             priority
-            className="object-cover opacity-35"
+            className="object-cover opacity-60"
             sizes="100vw"
           />
         ) : null}
-        <div className="absolute inset-0 bg-gradient-to-r from-charcoal via-charcoal/88 to-charcoal/55" />
+        <div className="absolute inset-0 bg-gradient-to-r from-charcoal/70 via-charcoal/45 to-charcoal/20" />
         <div className="relative mx-auto max-w-6xl px-6 py-[clamp(5rem,12vw,8.5rem)] sm:px-8">
           {data.heroEyebrow ? (
             <p className="nx-hero-rise mb-4 text-sm uppercase tracking-[0.14em] text-gold">

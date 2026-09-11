@@ -44,7 +44,7 @@ export function HeroCarousel({ slides, intervalMs = 5500 }: HeroCarouselProps) {
             priority={slideIndex === 0}
             sizes="100vw"
             className={`object-cover object-[center_30%] transition-opacity duration-[1200ms] ease-out ${
-              slideIndex === index ? "opacity-70" : "opacity-0"
+              slideIndex === index ? "opacity-85" : "opacity-0"
             }`}
           />
         ))}

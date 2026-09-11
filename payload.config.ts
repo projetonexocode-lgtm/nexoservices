@@ -55,11 +55,25 @@ export default buildConfig({
   serverURL,
   admin: {
     user: Users.slug,
+    theme: "dark",
     importMap: {
       baseDir: path.resolve(dirname),
     },
     meta: {
       titleSuffix: " · Nexo Services CMS",
+      icons: [
+        {
+          rel: "icon",
+          type: "image/svg+xml",
+          url: "/assets/nexo-services-fundo-claro.svg",
+        },
+      ],
+    },
+    components: {
+      graphics: {
+        Logo: "/components/payload/Logo.tsx",
+        Icon: "/components/payload/Icon.tsx",
+      },
     },
   },
   collections: [Users, Media],

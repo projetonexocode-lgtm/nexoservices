@@ -181,7 +181,7 @@ function AboutFromCms({
       >
         <HeroCarousel slides={heroSlides} />
         <div
-          className="absolute inset-0 bg-linear-to-r from-charcoal/85 via-charcoal/65 to-charcoal/25"
+          className="absolute inset-0 bg-linear-to-r from-charcoal/65 via-charcoal/40 to-charcoal/15"
           aria-hidden
         />
         <div className="relative mx-auto flex min-h-[min(100svh,52rem)] max-w-6xl flex-col justify-center px-6 pb-28 pt-16 sm:px-8 sm:pt-20 lg:pb-20">

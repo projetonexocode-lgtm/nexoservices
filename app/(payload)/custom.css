@@ -1,1 +1,86 @@
-/* Payload admin custom styles (optional). */
+/* Payload admin — cream login only; keep dark theme inside the dashboard */
+
+:root {
+  --nexo-cream: #faf7f2;
+  --nexo-charcoal: #1a1815;
+  --nexo-muted: #6b6560;
+  --nexo-border: #ddd6cb;
+  --nexo-gold: #b08d4f;
+}
+
+/* —— Login (light) —— */
+.login {
+  min-height: 100%;
+  background: var(--nexo-cream) !important;
+}
+
+.template-default:has(.login),
+html:has(.login),
+body:has(.login) {
+  background: var(--nexo-cream) !important;
+}
+
+.login__brand {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.75rem;
+}
+
+.login__brand img {
+  height: 72px;
+  width: auto;
+  max-width: 240px;
+}
+
+.login .field-label,
+.login label {
+  color: var(--nexo-charcoal);
+}
+
+.login .required {
+  color: #c0392b;
+}
+
+.login input[type="email"],
+.login input[type="password"],
+.login input[type="text"],
+.login .input-wrapper input {
+  background: #fff !important;
+  border-color: var(--nexo-border) !important;
+  color: var(--nexo-charcoal) !important;
+  border-radius: 4px;
+}
+
+.login input:focus {
+  border-color: var(--nexo-gold) !important;
+  box-shadow: 0 0 0 1px var(--nexo-gold);
+}
+
+.login a {
+  color: var(--nexo-muted);
+}
+
+.login a:hover {
+  color: var(--nexo-charcoal);
+}
+
+.login .btn--style-primary,
+.login button[type="submit"] {
+  background: var(--nexo-charcoal) !important;
+  border-color: var(--nexo-charcoal) !important;
+  color: #fff !important;
+  border-radius: 4px;
+}
+
+.login .btn--style-primary:hover,
+.login button[type="submit"]:hover {
+  background: #2a2622 !important;
+  border-color: #2a2622 !important;
+}
+
+/* —— Dashboard chrome (keep Payload dark UI) —— */
+.nav__brand img,
+.nav-brand img {
+  height: 28px;
+  width: auto;
+}
